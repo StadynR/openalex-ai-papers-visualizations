@@ -4,6 +4,7 @@ project:
 
 website:
   title: "Proyecto Final"
+  site-url: "https://stadynr.github.io/openalex-ai-papers-visualizations/"
   navbar:
     left:
       - href: index.qmd
