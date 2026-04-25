@@ -1,0 +1,25 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Proyecto Final"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: data_cleaning.qmd
+        text: Data Cleaning
+      - href: visualizations.qmd
+        text: Visualizations
+
+jupyter:
+  kernelspec:
+    name: python3
+    language: python
+    display_name: Python 3
+
+format:
+  html:
+    theme: cosmo
+    toc: true

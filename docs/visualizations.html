@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Análisis Visual de Tendencias en Publicaciones de IA – Proyecto Final</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a0f9fd0d421825b736dc1bbcbcba2219.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script>
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+</script>
+<script type="module">import "https://cdn.plot.ly/plotly-3.5.0.min"</script>
+
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Proyecto Final</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./data_cleaning.html"> 
+<span class="menu-text">Data Cleaning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./visualizations.html" aria-current="page"> 
+<span class="menu-text">Visualizations</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#pregunta-1---cuáles-son-las-tendencias-de-publicación-a-lo-largo-del-tiempo" id="toc-pregunta-1---cuáles-son-las-tendencias-de-publicación-a-lo-largo-del-tiempo" class="nav-link active" data-scroll-target="#pregunta-1---cuáles-son-las-tendencias-de-publicación-a-lo-largo-del-tiempo">Pregunta 1 - ¿Cuáles son las tendencias de publicación a lo largo del tiempo?</a></li>
+  <li><a href="#pregunta-2---qué-temas-crecieron-más-rápido" id="toc-pregunta-2---qué-temas-crecieron-más-rápido" class="nav-link" data-scroll-target="#pregunta-2---qué-temas-crecieron-más-rápido">Pregunta 2 - ¿Qué temas crecieron más rápido?</a></li>
+  <li><a href="#pregunta-3---cuáles-son-los-temas-más-populares-en-la-academia-de-ia" id="toc-pregunta-3---cuáles-son-los-temas-más-populares-en-la-academia-de-ia" class="nav-link" data-scroll-target="#pregunta-3---cuáles-son-los-temas-más-populares-en-la-academia-de-ia">Pregunta 3 - ¿Cuáles son los temas más populares en la academia de IA?</a></li>
+  <li><a href="#pregunta-4---cómo-se-distribuyen-geográficamente-las-publicaciones" id="toc-pregunta-4---cómo-se-distribuyen-geográficamente-las-publicaciones" class="nav-link" data-scroll-target="#pregunta-4---cómo-se-distribuyen-geográficamente-las-publicaciones">Pregunta 4 - ¿Cómo se distribuyen geográficamente las publicaciones?</a></li>
+  <li><a href="#pregunta-5---hay-correlación-entre-el-volumen-de-publicaciones-y-su-impacto" id="toc-pregunta-5---hay-correlación-entre-el-volumen-de-publicaciones-y-su-impacto" class="nav-link" data-scroll-target="#pregunta-5---hay-correlación-entre-el-volumen-de-publicaciones-y-su-impacto">Pregunta 5 - ¿Hay correlación entre el volumen de publicaciones y su impacto?</a></li>
+  <li><a href="#pregunta-6---la-colaboración-internacional-se-asocia-con-mayor-impacto" id="toc-pregunta-6---la-colaboración-internacional-se-asocia-con-mayor-impacto" class="nav-link" data-scroll-target="#pregunta-6---la-colaboración-internacional-se-asocia-con-mayor-impacto">Pregunta 6 - ¿La colaboración internacional se asocia con mayor impacto?</a></li>
+  <li><a href="#pregunta-7---publicar-en-open-access-genera-ventaja-en-citas" id="toc-pregunta-7---publicar-en-open-access-genera-ventaja-en-citas" class="nav-link" data-scroll-target="#pregunta-7---publicar-en-open-access-genera-ventaja-en-citas">Pregunta 7 - ¿Publicar en Open Access genera ventaja en citas?</a></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones">Conclusiones</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Análisis Visual de Tendencias en Publicaciones de IA</h1>
+<p class="subtitle lead">¿Qué nos cuentan los datos sobre la evolución académica de la inteligencia artificial?</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<section id="pregunta-1---cuáles-son-las-tendencias-de-publicación-a-lo-largo-del-tiempo" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-1---cuáles-son-las-tendencias-de-publicación-a-lo-largo-del-tiempo">Pregunta 1 - ¿Cuáles son las tendencias de publicación a lo largo del tiempo?</h2>
+<p>La IA no creció de manera uniforme. Hubo décadas de avance pausado intercaladas con explosiones de actividad impulsadas por descubrimientos tecnológicos clave. El primer gráfico muestra la cantidad total de publicaciones por año; el segundo, la tasa de crecimiento anual, que revela cuándo fue realmente más acelerado ese crecimiento.</p>
+<div id="cell-q1-volumen" class="cell" data-execution_count="2">
+<div id="q1-volumen" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-cd5430bf90904611bfb113bf36a422a5.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-cd5430bf90904611bfb113bf36a422a5.vega-embed details,
+  #altair-viz-cd5430bf90904611bfb113bf36a422a5.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-cd5430bf90904611bfb113bf36a422a5"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-cd5430bf90904611bfb113bf36a422a5") {
+      outputDiv = document.getElementById("altair-viz-cd5430bf90904611bfb113bf36a422a5");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 14}, "title": {"fontSize": 16}}, "layer": [{"mark": {"type": "area", "color": "#4C72B0", "interpolate": "monotone", "opacity": 0.25}, "encoding": {"x": {"axis": {"labelAngle": 0, "values": [1950, 1955, 1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020, 2025]}, "field": "year", "title": "A\u00f1o", "type": "ordinal"}, "y": {"field": "total_papers", "title": "N\u00famero de publicaciones", "type": "quantitative"}}}, {"mark": {"type": "line", "color": "#4C72B0", "interpolate": "monotone", "size": 3}, "encoding": {"x": {"axis": {"labelAngle": 0, "values": [1950, 1955, 1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020, 2025]}, "field": "year", "title": "A\u00f1o", "type": "ordinal"}, "y": {"field": "total_papers", "type": "quantitative"}}}, {"mark": {"type": "circle", "color": "#4C72B0", "size": 50}, "encoding": {"tooltip": [{"field": "year", "type": "quantitative"}, {"field": "total_papers", "format": ",", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0, "values": [1950, 1955, 1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020, 2025]}, "field": "year", "title": "A\u00f1o", "type": "ordinal"}, "y": {"field": "total_papers", "type": "quantitative"}}}, {"data": {"name": "data-2f53b6f410a40208dc696d698d0b76af"}, "mark": {"type": "rule", "color": "#DD8452", "opacity": 0.8, "strokeDash": [4, 4]}, "encoding": {"x": {"field": "year", "type": "ordinal"}}}, {"data": {"name": "data-2f53b6f410a40208dc696d698d0b76af"}, "mark": {"type": "text", "align": "left", "color": "#DD8452", "dx": 5, "fontSize": 12}, "encoding": {"text": {"field": "label", "type": "nominal"}, "x": {"field": "year", "type": "ordinal"}, "y": {"axis": null, "field": "y", "type": "quantitative"}}}], "data": {"name": "data-9da371628aac7a1d3e19e71c8be1f8cb"}, "height": 430, "title": "Publicaciones acad\u00e9micas en IA por a\u00f1o (1950 \u2013 2026)", "width": 700, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-9da371628aac7a1d3e19e71c8be1f8cb": [{"year": 1950, "total_papers": 1409}, {"year": 1951, "total_papers": 1545}, {"year": 1952, "total_papers": 1614}, {"year": 1953, "total_papers": 1764}, {"year": 1954, "total_papers": 1808}, {"year": 1955, "total_papers": 1878}, {"year": 1956, "total_papers": 1966}, {"year": 1957, "total_papers": 2056}, {"year": 1958, "total_papers": 2211}, {"year": 1959, "total_papers": 2516}, {"year": 1960, "total_papers": 2735}, {"year": 1961, "total_papers": 2871}, {"year": 1962, "total_papers": 2999}, {"year": 1963, "total_papers": 3435}, {"year": 1964, "total_papers": 3789}, {"year": 1965, "total_papers": 4137}, {"year": 1966, "total_papers": 4371}, {"year": 1967, "total_papers": 4772}, {"year": 1968, "total_papers": 5344}, {"year": 1969, "total_papers": 6016}, {"year": 1970, "total_papers": 6831}, {"year": 1971, "total_papers": 6309}, {"year": 1972, "total_papers": 6744}, {"year": 1973, "total_papers": 6955}, {"year": 1974, "total_papers": 7375}, {"year": 1975, "total_papers": 7988}, {"year": 1976, "total_papers": 7731}, {"year": 1977, "total_papers": 8392}, {"year": 1978, "total_papers": 8709}, {"year": 1979, "total_papers": 9069}, {"year": 1980, "total_papers": 9567}, {"year": 1981, "total_papers": 9658}, {"year": 1982, "total_papers": 10150}, {"year": 1983, "total_papers": 11193}, {"year": 1984, "total_papers": 11579}, {"year": 1985, "total_papers": 12374}, {"year": 1986, "total_papers": 13980}, {"year": 1987, "total_papers": 15497}, {"year": 1988, "total_papers": 17145}, {"year": 1989, "total_papers": 18525}, {"year": 1990, "total_papers": 21059}, {"year": 1991, "total_papers": 22413}, {"year": 1992, "total_papers": 24494}, {"year": 1993, "total_papers": 25714}, {"year": 1994, "total_papers": 27811}, {"year": 1995, "total_papers": 27781}, {"year": 1996, "total_papers": 31165}, {"year": 1997, "total_papers": 30973}, {"year": 1998, "total_papers": 33669}, {"year": 1999, "total_papers": 36075}, {"year": 2000, "total_papers": 42868}, {"year": 2001, "total_papers": 46691}, {"year": 2002, "total_papers": 97585}, {"year": 2003, "total_papers": 80791}, {"year": 2004, "total_papers": 81295}, {"year": 2005, "total_papers": 96776}, {"year": 2006, "total_papers": 103852}, {"year": 2007, "total_papers": 107497}, {"year": 2008, "total_papers": 114210}, {"year": 2009, "total_papers": 121732}, {"year": 2010, "total_papers": 131105}, {"year": 2011, "total_papers": 128492}, {"year": 2012, "total_papers": 131085}, {"year": 2013, "total_papers": 136067}, {"year": 2014, "total_papers": 136848}, {"year": 2015, "total_papers": 136816}, {"year": 2016, "total_papers": 141150}, {"year": 2017, "total_papers": 140318}, {"year": 2018, "total_papers": 149976}, {"year": 2019, "total_papers": 165481}, {"year": 2020, "total_papers": 167732}, {"year": 2021, "total_papers": 171032}, {"year": 2022, "total_papers": 170399}, {"year": 2023, "total_papers": 193935}, {"year": 2024, "total_papers": 215821}, {"year": 2025, "total_papers": 270937}, {"year": 2026, "total_papers": 118497}], "data-2f53b6f410a40208dc696d698d0b76af": [{"year": 1956, "label": "Conferencia de Dartmouth", "y": 265518.26}, {"year": 2012, "label": "AlexNet", "y": 265518.26}, {"year": 2017, "label": "Transformers", "y": 238424.56}, {"year": 2022, "label": "ChatGPT", "y": 211330.86000000002}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>El gráfico muestra que el campo de la IA creció de forma casi imperceptible durante sus primeras cuatro décadas. El gran punto de inflexión llegó en 2012, cuando AlexNet demostró el poder del deep learning. Desde entonces el crecimiento fue sostenido, con una aceleración notable tras la publicación del artículo que vio nacer al Transformer en 2017 y un salto histórico tras el lanzamiento de ChatGPT en 2022. En 2025 se registraron más de <strong>270.000 publicaciones</strong>, más de 190 veces las de 1950. Un detalle importante es que hay una subida repentina en 2002. Si bien esto se podría interpretar como un crecimiento orgánico por un gran descubrimiento (por ejemplo las investigaciones sobre SVM, lo único que podría ser la causa, pero no fue tan relevante realmente) la realidad es que, por lo que he podido averiguar, muy probablemente se debe a un cambio en la cobertura de OpenAlex: a partir de ese año se incorporaron muchas revistas y conferencias que antes no estaban indexadas, lo que infló artificialmente el número de publicaciones. Por eso, aunque el gráfico muestra esa subida, no se le puede atribuir a un aumento real en la producción científica.</p>
+<div id="cell-q1-crecimiento-yoy" class="cell" data-execution_count="3">
+<div id="q1-crecimiento-yoy" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-f96da2cec47945488582a7b38a6971bd.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-f96da2cec47945488582a7b38a6971bd.vega-embed details,
+  #altair-viz-f96da2cec47945488582a7b38a6971bd.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-f96da2cec47945488582a7b38a6971bd"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-f96da2cec47945488582a7b38a6971bd") {
+      outputDiv = document.getElementById("altair-viz-f96da2cec47945488582a7b38a6971bd");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 14}, "title": {"fontSize": 16}}, "layer": [{"mark": {"type": "bar"}, "encoding": {"color": {"condition": {"test": "(datum.yoy_pct >= 0)", "value": "#4C72B0"}, "value": "#C44E52"}, "tooltip": [{"field": "year", "type": "quantitative"}, {"field": "yoy_pct", "format": ".1f", "title": "Cambio %", "type": "quantitative"}], "x": {"field": "year", "title": "A\u00f1o", "type": "ordinal"}, "y": {"field": "yoy_pct", "title": "Variaci\u00f3n respecto al a\u00f1o anterior (%)", "type": "quantitative"}}, "title": "Crecimiento anual de publicaciones en IA (2006 \u2013 2025)"}, {"mark": {"type": "text", "color": "black", "dy": -10}, "encoding": {"color": {"condition": {"test": "(datum.yoy_pct >= 0)", "value": "#4C72B0"}, "value": "#C44E52"}, "text": {"field": "yoy_pct", "format": ".1f", "type": "quantitative"}, "tooltip": [{"field": "year", "type": "quantitative"}, {"field": "yoy_pct", "format": ".1f", "title": "Cambio %", "type": "quantitative"}], "x": {"field": "year", "title": "A\u00f1o", "type": "ordinal"}, "y": {"field": "yoy_pct", "title": "Variaci\u00f3n respecto al a\u00f1o anterior (%)", "type": "quantitative"}}, "title": "Crecimiento anual de publicaciones en IA (2006 \u2013 2025)"}], "data": {"name": "data-c9cc481b3fcca6093e0fe8f8bea8a24d"}, "height": 430, "width": 700, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-c9cc481b3fcca6093e0fe8f8bea8a24d": [{"year": 2006, "total_papers": 103852, "yoy_pct": 7.311730181036613}, {"year": 2007, "total_papers": 107497, "yoy_pct": 3.5098024111235304}, {"year": 2008, "total_papers": 114210, "yoy_pct": 6.244825436988943}, {"year": 2009, "total_papers": 121732, "yoy_pct": 6.5861133000612915}, {"year": 2010, "total_papers": 131105, "yoy_pct": 7.699700982486113}, {"year": 2011, "total_papers": 128492, "yoy_pct": -1.9930589985126423}, {"year": 2012, "total_papers": 131085, "yoy_pct": 2.0180244684494086}, {"year": 2013, "total_papers": 136067, "yoy_pct": 3.800587405118816}, {"year": 2014, "total_papers": 136848, "yoy_pct": 0.5739819353700826}, {"year": 2015, "total_papers": 136816, "yoy_pct": -0.023383608090732366}, {"year": 2016, "total_papers": 141150, "yoy_pct": 3.167758156940703}, {"year": 2017, "total_papers": 140318, "yoy_pct": -0.589443854055971}, {"year": 2018, "total_papers": 149976, "yoy_pct": 6.882937328069105}, {"year": 2019, "total_papers": 165481, "yoy_pct": 10.33832079799435}, {"year": 2020, "total_papers": 167732, "yoy_pct": 1.3602770106537987}, {"year": 2021, "total_papers": 171032, "yoy_pct": 1.9674242243578943}, {"year": 2022, "total_papers": 170399, "yoy_pct": -0.3701061789606608}, {"year": 2023, "total_papers": 193935, "yoy_pct": 13.81228763079596}, {"year": 2024, "total_papers": 215821, "yoy_pct": 11.285224430866014}, {"year": 2025, "total_papers": 270937, "yoy_pct": 25.537829960939852}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>Como se puede ver, la tasa de crecimiento anual aporta una perspectiva distinta: muestra <em>cuándo</em> fue más acelerada la expansión, no solo cuánto se publicó. Se pueden notar fácilmente los grandes puntos de interés de los tiempos modernos: en 2018, tras la publicación del Transformer, la tasa de crecimiento se disparó, estabilizándose poco después. En 2023, luego de la salida de ChatGPT, se alcanzó un pico aún mayor, mostrando el nacimiento de la IA Generativa como rama de investigación, una tendencia algo controlada en 2024, pero que se disparó como nunca en 2025. Si tomamos en cuenta las tendencias de los otros períodos de explosión, cabría esperar estabilización en el área en los próximos años.</p>
+<hr>
+</section>
+<section id="pregunta-2---qué-temas-crecieron-más-rápido" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-2---qué-temas-crecieron-más-rápido">Pregunta 2 - ¿Qué temas crecieron más rápido?</h2>
+<p>Para medir la “tasa de crecimiento tras el surgimiento” de cada tema, utilizamos el período <strong>2017–2025</strong>: los años inmediatamente posteriores a la masificación de los Transformers, y la masificación de la IA Generativa, que marcó el verdadero despegue de muchas líneas de investigación modernas en IA. Solo se incluyeron temas con al menos 50 publicaciones en 2017, para asegurar que el crecimiento sea estadísticamente significativo y no un artefacto de partidas desde cero.</p>
+<div id="cell-q2-barras" class="cell" data-execution_count="4">
+<div id="q2-barras" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-7dd4d9fb03a14558ac75e1505282856c.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-7dd4d9fb03a14558ac75e1505282856c.vega-embed details,
+  #altair-viz-7dd4d9fb03a14558ac75e1505282856c.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-7dd4d9fb03a14558ac75e1505282856c"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-7dd4d9fb03a14558ac75e1505282856c") {
+      outputDiv = document.getElementById("altair-viz-7dd4d9fb03a14558ac75e1505282856c");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 14}, "title": {"fontSize": 16}}, "layer": [{"mark": {"type": "bar"}, "encoding": {"color": {"field": "Crecimiento (%)", "legend": null, "scale": {"scheme": "blues"}, "type": "quantitative"}, "tooltip": [{"field": "Tema", "type": "nominal"}, {"field": "Papers 2017", "type": "quantitative"}, {"field": "Papers 2025", "type": "quantitative"}, {"field": "Crecimiento (%)", "format": ".1f", "type": "quantitative"}], "x": {"field": "Crecimiento (%)", "title": "Crecimiento porcentual (%)", "type": "quantitative"}, "y": {"field": "Tema", "sort": {"field": "Crecimiento (%)", "order": "descending"}, "title": "", "type": "nominal"}}, "title": "Top 15 temas con mayor crecimiento 2017 - 2025"}, {"mark": {"type": "text", "align": "left", "color": "black", "dx": 5}, "encoding": {"color": {"field": "Crecimiento (%)", "legend": null, "scale": {"scheme": "blues"}, "type": "quantitative"}, "text": {"field": "Crecimiento (%)", "format": ".0f", "type": "quantitative"}, "tooltip": [{"field": "Tema", "type": "nominal"}, {"field": "Papers 2017", "type": "quantitative"}, {"field": "Papers 2025", "type": "quantitative"}, {"field": "Crecimiento (%)", "format": ".1f", "type": "quantitative"}], "x": {"field": "Crecimiento (%)", "title": "Crecimiento porcentual (%)", "type": "quantitative"}, "y": {"field": "Tema", "sort": {"field": "Crecimiento (%)", "order": "descending"}, "title": "", "type": "nominal"}}, "title": "Top 15 temas con mayor crecimiento 2017 - 2025"}], "data": {"name": "data-8f9308056c54b0e6b9d47103bc7aa3a4"}, "height": 520, "width": 700, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-8f9308056c54b0e6b9d47103bc7aa3a4": [{"Tema": "Explainable Artificial Intelligence (XAI)", "Papers 2017": 110.0, "Papers 2025": 4441.0, "Crecimiento (%)": 3937.2727272727275}, {"Tema": "AI in Service Interactions", "Papers 2017": 285.0, "Papers 2025": 8471.0, "Crecimiento (%)": 2872.280701754386}, {"Tema": "Adversarial Robustness in Machine Learning", "Papers 2017": 238.0, "Papers 2025": 4784.0, "Crecimiento (%)": 1910.0840336134454}, {"Tema": "Advanced Graph Neural Networks", "Papers 2017": 352.0, "Papers 2025": 4537.0, "Crecimiento (%)": 1188.9204545454545}, {"Tema": "Multimodal Machine Learning Applications", "Papers 2017": 451.0, "Papers 2025": 5136.0, "Crecimiento (%)": 1038.8026607538802}, {"Tema": "Machine Learning in Healthcare", "Papers 2017": 459.0, "Papers 2025": 3919.0, "Crecimiento (%)": 753.8126361655773}, {"Tema": "Generative Adversarial Networks and Image Synthesis", "Papers 2017": 471.0, "Papers 2025": 3962.0, "Crecimiento (%)": 741.1889596602973}, {"Tema": "Advanced Neural Network Applications", "Papers 2017": 1309.0, "Papers 2025": 9976.0, "Crecimiento (%)": 662.1084797555386}, {"Tema": "Advanced Technologies in Various Fields", "Papers 2017": 244.0, "Papers 2025": 1770.0, "Crecimiento (%)": 625.4098360655738}, {"Tema": "Wireless Signal Modulation Classification", "Papers 2017": 276.0, "Papers 2025": 1897.0, "Crecimiento (%)": 587.3188405797101}, {"Tema": "Domain Adaptation and Few-Shot Learning", "Papers 2017": 407.0, "Papers 2025": 2782.0, "Crecimiento (%)": 583.5380835380836}, {"Tema": "Neural Networks and Reservoir Computing", "Papers 2017": 447.0, "Papers 2025": 2616.0, "Crecimiento (%)": 485.2348993288591}, {"Tema": "Artificial Intelligence Applications", "Papers 2017": 160.0, "Papers 2025": 936.0, "Crecimiento (%)": 484.99999999999994}, {"Tema": "Educational Technology and Pedagogy", "Papers 2017": 565.0, "Papers 2025": 3214.0, "Crecimiento (%)": 468.8495575221239}, {"Tema": "Imbalanced Data Classification Techniques", "Papers 2017": 629.0, "Papers 2025": 3388.0, "Crecimiento (%)": 438.63275039745633}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>Los temas con mayor explosión de actividad son precisamente los que definen la IA contemporánea. La <strong>IA Explicable (XAI)</strong> e <strong>IA en interacciones de servicios</strong> lideran el ranking con crecimientos superiores al 2000 %, lo que refleja la necesidad de la comunidad científica de hacer los modelos más interpretables, seguros y adecuados para interactuar con seres humanos en sistemas. Les siguen la <strong>Robustez Adversarial</strong> y las <strong>Redes Neuronales de Grafos</strong>, que definen la base de los sistemas generativos modernos. En conjunto, este gráfico es un mapa de las prioridades investigadoras los últimos años.</p>
+<div id="cell-q2-trayectorias" class="cell" data-execution_count="5">
+<div id="q2-trayectorias" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-0753aadefee54d47a528180bfcffc026.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-0753aadefee54d47a528180bfcffc026.vega-embed details,
+  #altair-viz-0753aadefee54d47a528180bfcffc026.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-0753aadefee54d47a528180bfcffc026"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-0753aadefee54d47a528180bfcffc026") {
+      outputDiv = document.getElementById("altair-viz-0753aadefee54d47a528180bfcffc026");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 14}, "legend": {"labelFontSize": 12, "titleFontSize": 14}, "title": {"fontSize": 16}}, "data": {"name": "data-0f34627a4344e6dd609da0ea8d6d1a4c"}, "mark": {"type": "line", "point": true}, "encoding": {"color": {"field": "topic_name", "title": "Tema", "type": "nominal"}, "tooltip": [{"field": "topic_name", "type": "nominal"}, {"field": "year", "type": "quantitative"}, {"field": "n_papers", "type": "quantitative"}], "x": {"field": "year", "title": "A\u00f1o", "type": "ordinal"}, "y": {"field": "n_papers", "title": "Publicaciones", "type": "quantitative"}}, "height": 450, "title": "Trayectoria de los 6 temas de m\u00e1s r\u00e1pido crecimiento (2010 \u2013 2025)", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-0f34627a4344e6dd609da0ea8d6d1a4c": [{"year": 2010, "total_papers": 131105, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 110}, {"year": 2010, "total_papers": 131105, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 104}, {"year": 2010, "total_papers": 131105, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 40}, {"year": 2010, "total_papers": 131105, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 39}, {"year": 2010, "total_papers": 131105, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 35}, {"year": 2010, "total_papers": 131105, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 24}, {"year": 2011, "total_papers": 128492, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 142}, {"year": 2011, "total_papers": 128492, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 97}, {"year": 2011, "total_papers": 128492, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 55}, {"year": 2011, "total_papers": 128492, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 43}, {"year": 2011, "total_papers": 128492, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 42}, {"year": 2011, "total_papers": 128492, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 21}, {"year": 2012, "total_papers": 131085, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 181}, {"year": 2012, "total_papers": 131085, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 117}, {"year": 2012, "total_papers": 131085, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 67}, {"year": 2012, "total_papers": 131085, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 53}, {"year": 2012, "total_papers": 131085, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 28}, {"year": 2012, "total_papers": 131085, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 27}, {"year": 2013, "total_papers": 136067, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 210}, {"year": 2013, "total_papers": 136067, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 110}, {"year": 2013, "total_papers": 136067, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 99}, {"year": 2013, "total_papers": 136067, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 86}, {"year": 2013, "total_papers": 136067, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 42}, {"year": 2013, "total_papers": 136067, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 34}, {"year": 2014, "total_papers": 136848, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 269}, {"year": 2014, "total_papers": 136848, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 139}, {"year": 2014, "total_papers": 136848, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 120}, {"year": 2014, "total_papers": 136848, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 85}, {"year": 2014, "total_papers": 136848, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 56}, {"year": 2014, "total_papers": 136848, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 44}, {"year": 2015, "total_papers": 136816, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 307}, {"year": 2015, "total_papers": 136816, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 169}, {"year": 2015, "total_papers": 136816, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 165}, {"year": 2015, "total_papers": 136816, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 111}, {"year": 2015, "total_papers": 136816, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 57}, {"year": 2015, "total_papers": 136816, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 53}, {"year": 2016, "total_papers": 141150, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 402}, {"year": 2016, "total_papers": 141150, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 290}, {"year": 2016, "total_papers": 141150, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 248}, {"year": 2016, "total_papers": 141150, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 177}, {"year": 2016, "total_papers": 141150, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 114}, {"year": 2016, "total_papers": 141150, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 73}, {"year": 2017, "total_papers": 140318, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 459}, {"year": 2017, "total_papers": 140318, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 451}, {"year": 2017, "total_papers": 140318, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 352}, {"year": 2017, "total_papers": 140318, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 285}, {"year": 2017, "total_papers": 140318, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 238}, {"year": 2017, "total_papers": 140318, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 110}, {"year": 2018, "total_papers": 149976, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 703}, {"year": 2018, "total_papers": 149976, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 631}, {"year": 2018, "total_papers": 149976, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 629}, {"year": 2018, "total_papers": 149976, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 626}, {"year": 2018, "total_papers": 149976, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 586}, {"year": 2018, "total_papers": 149976, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 270}, {"year": 2019, "total_papers": 165481, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1169}, {"year": 2019, "total_papers": 165481, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 1092}, {"year": 2019, "total_papers": 165481, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 944}, {"year": 2019, "total_papers": 165481, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 889}, {"year": 2019, "total_papers": 165481, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 822}, {"year": 2019, "total_papers": 165481, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 522}, {"year": 2020, "total_papers": 167732, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1628}, {"year": 2020, "total_papers": 167732, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1365}, {"year": 2020, "total_papers": 167732, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 1186}, {"year": 2020, "total_papers": 167732, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1165}, {"year": 2020, "total_papers": 167732, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 998}, {"year": 2020, "total_papers": 167732, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 750}, {"year": 2021, "total_papers": 171032, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2190}, {"year": 2021, "total_papers": 171032, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1854}, {"year": 2021, "total_papers": 171032, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 1730}, {"year": 2021, "total_papers": 171032, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1243}, {"year": 2021, "total_papers": 171032, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1022}, {"year": 2021, "total_papers": 171032, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1015}, {"year": 2022, "total_papers": 170399, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2397}, {"year": 2022, "total_papers": 170399, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2301}, {"year": 2022, "total_papers": 170399, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 2049}, {"year": 2022, "total_papers": 170399, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1586}, {"year": 2022, "total_papers": 170399, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1218}, {"year": 2022, "total_papers": 170399, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1107}, {"year": 2023, "total_papers": 193935, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 3056}, {"year": 2023, "total_papers": 193935, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 2885}, {"year": 2023, "total_papers": 193935, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2656}, {"year": 2023, "total_papers": 193935, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2248}, {"year": 2023, "total_papers": 193935, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1577}, {"year": 2023, "total_papers": 193935, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1374}, {"year": 2024, "total_papers": 215821, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 3966}, {"year": 2024, "total_papers": 215821, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2985}, {"year": 2024, "total_papers": 215821, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2666}, {"year": 2024, "total_papers": 215821, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 2562}, {"year": 2024, "total_papers": 215821, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 2099}, {"year": 2024, "total_papers": 215821, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 1956}, {"year": 2025, "total_papers": 270937, "topic_name": "AI in Service Interactions", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 8471}, {"year": 2025, "total_papers": 270937, "topic_name": "Multimodal Machine Learning Applications", "subfield_name": "Computer Vision and Pattern Recognition", "field_name": "Computer Science", "n_papers": 5136}, {"year": 2025, "total_papers": 270937, "topic_name": "Adversarial Robustness in Machine Learning", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 4784}, {"year": 2025, "total_papers": 270937, "topic_name": "Advanced Graph Neural Networks", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 4537}, {"year": 2025, "total_papers": 270937, "topic_name": "Explainable Artificial Intelligence (XAI)", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 4441}, {"year": 2025, "total_papers": 270937, "topic_name": "Machine Learning in Healthcare", "subfield_name": "Artificial Intelligence", "field_name": "Computer Science", "n_papers": 3919}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>Las trayectorias confirman que estos temas prácticamente no existían como línea de investigación antes de 2016. La curva de <strong>AI in Service Interactions</strong> es la más pronunciada, con un crecimiento exponencial desde 2017. La <strong>IA Explicable</strong> también muestra una subida meteórica, especialmente a partir de 2018, reflejando la creciente preocupación por la interpretabilidad de los modelos. Las otras cuatro áreas siguen una tendencia similar, con un despegue claro a partir de 2017 y un crecimiento sostenido hasta 2025. Estas trayectorias son un testimonio visual del impacto transformador que los avances tecnológicos recientes han tenido en la dirección de la investigación en IA.</p>
+<hr>
+</section>
+<section id="pregunta-3---cuáles-son-los-temas-más-populares-en-la-academia-de-ia" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-3---cuáles-son-los-temas-más-populares-en-la-academia-de-ia">Pregunta 3 - ¿Cuáles son los temas más populares en la academia de IA?</h2>
+<div id="cell-q3-barras" class="cell" data-execution_count="6">
+<div id="q3-barras" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-d729c3bf2a9b480cac5049e906d6186a.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-d729c3bf2a9b480cac5049e906d6186a.vega-embed details,
+  #altair-viz-d729c3bf2a9b480cac5049e906d6186a.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-d729c3bf2a9b480cac5049e906d6186a"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-d729c3bf2a9b480cac5049e906d6186a") {
+      outputDiv = document.getElementById("altair-viz-d729c3bf2a9b480cac5049e906d6186a");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 14}, "title": {"fontSize": 16}}, "layer": [{"mark": {"type": "bar"}, "encoding": {"color": {"field": "Total de publicaciones", "legend": null, "scale": {"scheme": "tealblues"}, "type": "quantitative"}, "tooltip": [{"field": "Tema", "type": "nominal"}, {"field": "Total de publicaciones", "format": ",", "type": "quantitative"}], "x": {"field": "Total de publicaciones", "title": "Total de publicaciones", "type": "quantitative"}, "y": {"field": "Tema", "sort": {"field": "Total de publicaciones", "order": "descending"}, "title": "", "type": "nominal"}}, "title": "Top 15 temas m\u00e1s prol\u00edficos en publicaciones de IA (1950 \u2013 2025)"}, {"mark": {"type": "text", "align": "left", "color": "black", "dx": 5}, "encoding": {"color": {"field": "Total de publicaciones", "legend": null, "scale": {"scheme": "tealblues"}, "type": "quantitative"}, "text": {"field": "Total de publicaciones", "format": ",", "type": "quantitative"}, "tooltip": [{"field": "Tema", "type": "nominal"}, {"field": "Total de publicaciones", "format": ",", "type": "quantitative"}], "x": {"field": "Total de publicaciones", "title": "Total de publicaciones", "type": "quantitative"}, "y": {"field": "Tema", "sort": {"field": "Total de publicaciones", "order": "descending"}, "title": "", "type": "nominal"}}, "title": "Top 15 temas m\u00e1s prol\u00edficos en publicaciones de IA (1950 \u2013 2025)"}], "data": {"name": "data-2eb4437dc94934a3fa4a3a477eea32dc"}, "height": 530, "width": 700, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-2eb4437dc94934a3fa4a3a477eea32dc": [{"Tema": "Advanced Computational Techniques and Applications", "Total de publicaciones": 166216}, {"Tema": "Natural Language Processing Techniques", "Total de publicaciones": 159889}, {"Tema": "Neural Networks and Applications", "Total de publicaciones": 144877}, {"Tema": "Geochemistry and Geologic Mapping", "Total de publicaciones": 122629}, {"Tema": "Educational Robotics and Engineering", "Total de publicaciones": 117350}, {"Tema": "Semantic Web and Ontologies", "Total de publicaciones": 96368}, {"Tema": "Quantum Information and Cryptography", "Total de publicaciones": 85856}, {"Tema": "Robotic Path Planning Algorithms", "Total de publicaciones": 83397}, {"Tema": "Topic Modeling", "Total de publicaciones": 77174}, {"Tema": "Advanced Vision and Imaging", "Total de publicaciones": 73998}, {"Tema": "Linguistic Studies and Language Acquisition", "Total de publicaciones": 73032}, {"Tema": "Image and Signal Denoising Methods", "Total de publicaciones": 70780}, {"Tema": "Music Technology and Sound Studies", "Total de publicaciones": 67844}, {"Tema": "Edcuational Technology Systems", "Total de publicaciones": 62765}, {"Tema": "Video Surveillance and Tracking Methods", "Total de publicaciones": 60108}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>El podio lo ocupa <strong>Advanced Computational Techniques and Applications</strong> (más de 166.000 papers), seguido de cerca por <strong>Natural Language Processing</strong> y <strong>Neural Networks and Applications</strong>. Resulta llamativo que “Geochemistry and Geologic Mapping” aparezca en el top 5: esto se debe a que OpenAlex clasifica a la IA aplicada a geociencias bajo la categoría de IA. El dominio claro de NLP y redes neuronales refleja que el procesamiento de lenguaje y los modelos profundos son los pilares técnicos de la IA moderna, alimentado aún más por las investigaciones relacionadas a LLMs, que nacieron a partir de una arquitectura para NLP. Sin embargo, el hecho de que el tema más popular sea “Técnicas computacionales avanzadas y aplicaciones” sugiere que la comunidad académica también valora mucho las contribuciones metodológicas generales, que pueden aplicarse a múltiples áreas dentro de la IA.</p>
+<div id="cell-q3-treemap" class="cell" data-execution_count="7">
+<div id="q3-treemap" class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.5.0.min.js" integrity="sha256-fHbNLP+GlIXN+efbQec78UkemUz3NJp7UmfGxC1tNxs=" crossorigin="anonymous"></script>                <div id="57dc2b24-1f8c-4455-8578-0fb800c07f9c" class="plotly-graph-div" style="height:800px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("57dc2b24-1f8c-4455-8578-0fb800c07f9c")) {                    Plotly.newPlot(                        "57dc2b24-1f8c-4455-8578-0fb800c07f9c",                        [{"branchvalues":"total","customdata":{"dtype":"f8","bdata":"AAAAAAAepUAAAAAAgAbbQAAAAAAgLOdAAAAAAIBP20AAAAAAQNfSQAAAAABASgRBAAAAAMDL1EAAAAAAAP7gQAAAAACAmcNAAAAAAABr20AAAAAAwP3WQAAAAACg3+NAAAAAAIDz5kAAAAAAAAW4QAAAAADAkNVAAAAAAAAmwkAAAAAAQIjdQAAAAAAAOtpAAAAAAOCV5EAAAAAAgE7DQAAAAACAmtZAAAAAAED+3UAAAAAAQNHiQAAAAAAA8tRAAAAAACCo5UAAAAAAADLUQAAAAACA9cZAAAAAAACwoEAAAAAAQKrTQAAAAACgpe5AAAAAAGCm\u002fEAAAAAA4EvjQAAAAADADt1AAAAAAACokUAAAAAAgGHPQAAAAAAgleNAAAAAAADQwEAAAAAAUPD9QAAAAAAAYtdAAAAAAAAR1EAAAAAAgPndQAAAAADAb9ZAAAAAAAA+r0AAAAAAAEDTQAAAAACA1PFAAAAAAGCL4UAAAAAA4AvmQAAAAAAAUtBAAAAAAIAFzkAAAAAAgNDGQAAAAABAVNFAAAAAAICDxUAAAAAAABfnQAAAAABA59xAAAAAAIiEA0EAAAAAaK8BQQAAAADAxtBAAAAAAECX2EAAAAAAAMzlQAAAAAAAp7lAAAAAAICP6UAAAAAAAPb0QAAAAAAAmthAAAAAAMAz1EAAAAAAQIXiQAAAAAAAh\u002fdAAAAAAECR4kAAAAAAIOHhQAAAAAAAB+1AAAAAAGDt4EAAAAAAgFHHQAAAAAAAWr1AAAAAACBy5kAAAAAAgOXDQAAAAAAAodNAAAAAAGDX8kAAAAAAAPHHQAAAAADAQ+hAAAAAAMCH2kAAAAAAwF7pQAAAAABAZetAAAAAAECb6kAAAAAA4BDyQAAAAABA6+VAAAAAAMDz4kAAAAAA4LDlQAAAAAAAeLhAAAAAACBN4kAAAAAAALzMQAAAAACAxNBAAAAAAACWzUAAAAAAwHnoQAAAAACA7t9AAAAAAECu1EAAAAAAgLrKQAAAAADA3OFAAAAAAIBc20AAAAAAQFTeQAAAAADgyudAAAAAAKCY6EAAAAAAgI3SQAAAAADAR\u002fFAAAAAAMAU1kAAAAAAAA+8QAAAAADAK+hAAAAAAIC510AAAAAAQJDwQAAAAACAUetAAAAAAFBc9EAAAAAAwJffQAAAAACAWe1AAAAAAEC00EBLZ60tEqDwQLF7IuYjyudAiK\u002fFNH0o7kA=","shape":"115, 1"},"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"hovertemplate":"\u003cb\u003e%{label}\u003c\u002fb\u003e\u003cbr\u003e%{value:,} publicaciones\u003cbr\u003e%{percentParent:.1%} del subcampo\u003cextra\u003e\u003c\u002fextra\u003e","ids":["Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAI and\u003cbr\u003eMultimedia\u003cbr\u003ein Education","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAI in\u003cbr\u003eService\u003cbr\u003eInteractions","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAI in cancer\u003cbr\u003edetection","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAI-based\u003cbr\u003eProblem\u003cbr\u003eSolving and\u003cbr\u003ePlanning","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAdvanced\u003cbr\u003eClustering\u003cbr\u003eAlgorithms\u003cbr\u003eResearch","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAdvanced Com\u003cbr\u003eputational\u003cbr\u003eTechniques\u003cbr\u003eand\u003cbr\u003eApplications","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAdvanced\u003cbr\u003eGraph Neural\u003cbr\u003eNetworks","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAdvanced\u003cbr\u003eSoftware\u003cbr\u003eEngineering \u003cbr\u003eMethodologie\u003cbr\u003es","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAdvanced\u003cbr\u003eTechnologies\u003cbr\u003ein Various\u003cbr\u003eFields","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAdvanced\u003cbr\u003eText\u003cbr\u003eAnalysis\u003cbr\u003eTechniques","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAdversarial\u003cbr\u003eRobustness\u003cbr\u003ein Machine\u003cbr\u003eLearning","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAlgorithms\u003cbr\u003eand Data\u003cbr\u003eCompression","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAnomaly\u003cbr\u003eDetection\u003cbr\u003eTechniques\u003cbr\u003eand\u003cbr\u003eApplications","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fArtificial\u003cbr\u003eIntelligence\u003cbr\u003eApplications","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fArtificial\u003cbr\u003eIntelligence\u003cbr\u003ein Games","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fAuthorship\u003cbr\u003eAttribution\u003cbr\u003eand\u003cbr\u003eProfiling","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fBayesian\u003cbr\u003eMethods and\u003cbr\u003eMixture\u003cbr\u003eModels","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fBayesian\u003cbr\u003eModeling and\u003cbr\u003eCausal\u003cbr\u003eInference","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fCoding\u003cbr\u003etheory and\u003cbr\u003ecryptography","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fCognitive\u003cbr\u003eComputing\u003cbr\u003eand Networks","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fCognitive\u003cbr\u003eScience and\u003cbr\u003eMapping","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fComputationa\u003cbr\u003el Physics\u003cbr\u003eand Python\u003cbr\u003eApplications","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fComputer\u003cbr\u003eScience and\u003cbr\u003eEngineering","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fCryptographi\u003cbr\u003ec Implementa\u003cbr\u003etions and\u003cbr\u003eSecurity","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fCryptography\u003cbr\u003eand Data\u003cbr\u003eSecurity","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fData\u003cbr\u003eAnalysis\u003cbr\u003ewith R","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fData Stream\u003cbr\u003eMining\u003cbr\u003eTechniques","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fDiverse Inte\u003cbr\u003erdisciplinar\u003cbr\u003ey Research\u003cbr\u003eStudies","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fDomain\u003cbr\u003eAdaptation\u003cbr\u003eand Few-Shot\u003cbr\u003eLearning","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fEdcuational\u003cbr\u003eTechnology\u003cbr\u003eSystems","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fEducational\u003cbr\u003eRobotics and\u003cbr\u003eEngineering","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fEducational\u003cbr\u003eTechnology\u003cbr\u003eand Pedagogy","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fEvolutionary\u003cbr\u003eAlgorithms\u003cbr\u003eand\u003cbr\u003eApplications","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fExperience-\u003cbr\u003eBased\u003cbr\u003eKnowledge\u003cbr\u003eManagement","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fExplainable\u003cbr\u003eArtificial\u003cbr\u003eIntelligence\u003cbr\u003e(XAI)","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fFuzzy Logic\u003cbr\u003eand Control\u003cbr\u003eSystems","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fGaussian\u003cbr\u003eProcesses\u003cbr\u003eand Bayesian\u003cbr\u003eInference","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fGeochemistry\u003cbr\u003eand Geologic\u003cbr\u003eMapping","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fHate Speech\u003cbr\u003eand Cyberbul\u003cbr\u003elying\u003cbr\u003eDetection","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fImbalanced\u003cbr\u003eData Classif\u003cbr\u003eication\u003cbr\u003eTechniques","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fIntelligent\u003cbr\u003eTutoring\u003cbr\u003eSystems and\u003cbr\u003eAdaptive\u003cbr\u003eLearning","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fInternet\u003cbr\u003eTraffic\u003cbr\u003eAnalysis and\u003cbr\u003eSecure\u003cbr\u003eE-voting","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fIntuitionist\u003cbr\u003eic Fuzzy\u003cbr\u003eSystems\u003cbr\u003eApplications","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fLaw, AI, and\u003cbr\u003eIntellectual\u003cbr\u003eProperty","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fLinguistic\u003cbr\u003eStudies and\u003cbr\u003eLanguage\u003cbr\u003eAcquisition","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fLogic,\u003cbr\u003eReasoning,\u003cbr\u003eand\u003cbr\u003eKnowledge","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fLogic,\u003cbr\u003eprogramming,\u003cbr\u003eand type\u003cbr\u003esystems","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fMachine\u003cbr\u003eLearning and\u003cbr\u003eAlgorithms","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fMachine\u003cbr\u003eLearning and\u003cbr\u003eData Classif\u003cbr\u003eication","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fMachine\u003cbr\u003eLearning and\u003cbr\u003eELM","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fMachine\u003cbr\u003eLearning in\u003cbr\u003eHealthcare","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fMathematical\u003cbr\u003eControl\u003cbr\u003eSystems and\u003cbr\u003eAnalysis","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fMetaheuristi\u003cbr\u003ec\u003cbr\u003eOptimization\u003cbr\u003eAlgorithms\u003cbr\u003eResearch","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fMulti-Agent\u003cbr\u003eSystems and\u003cbr\u003eNegotiation","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fNatural\u003cbr\u003eLanguage\u003cbr\u003eProcessing\u003cbr\u003eTechniques","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fNeural\u003cbr\u003eNetworks and\u003cbr\u003eApplications","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fNeural\u003cbr\u003eNetworks and\u003cbr\u003eReservoir\u003cbr\u003eComputing","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fOrganization\u003cbr\u003eal and\u003cbr\u003eEmployee\u003cbr\u003ePerformance","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fPrivacy-\u003cbr\u003ePreserving\u003cbr\u003eTechnologies\u003cbr\u003ein Data","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fPsychiatry,\u003cbr\u003eMental\u003cbr\u003eHealth,\u003cbr\u003eNeuroscience","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fQuantum\u003cbr\u003eComputing\u003cbr\u003eAlgorithms\u003cbr\u003eand\u003cbr\u003eArchitecture","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fQuantum\u003cbr\u003eInformation\u003cbr\u003eand\u003cbr\u003eCryptography","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fReinforcemen\u003cbr\u003et Learning\u003cbr\u003ein Robotics","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fSecurity and\u003cbr\u003eVerification\u003cbr\u003ein Computing","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fSeismology\u003cbr\u003eand\u003cbr\u003eEarthquake\u003cbr\u003eStudies","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fSemantic Web\u003cbr\u003eand\u003cbr\u003eOntologies","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fSentiment\u003cbr\u003eAnalysis and\u003cbr\u003eOpinion\u003cbr\u003eMining","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fSolar\u003cbr\u003eRadiation\u003cbr\u003eand Photovol\u003cbr\u003etaics","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fSpeech\u003cbr\u003eRecognition\u003cbr\u003eand\u003cbr\u003eSynthesis","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fSpeech and\u003cbr\u003edialogue\u003cbr\u003esystems","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fStatistical\u003cbr\u003eand Computat\u003cbr\u003eional\u003cbr\u003eModeling","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fStochastic\u003cbr\u003eGradient\u003cbr\u003eOptimization\u003cbr\u003eTechniques","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fTarget\u003cbr\u003eTracking and\u003cbr\u003eData Fusion\u003cbr\u003ein Sensor\u003cbr\u003eNetworks","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fText\u003cbr\u003eReadability\u003cbr\u003eand Simplifi\u003cbr\u003ecation","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fText and\u003cbr\u003eDocument Cla\u003cbr\u003essification\u003cbr\u003eTechnologies","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fTopic\u003cbr\u003eModeling","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence\u002fWireless\u003cbr\u003eSignal\u003cbr\u003eModulation C\u003cbr\u003elassificatio\u003cbr\u003en","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fAdvanced\u003cbr\u003eData\u003cbr\u003eCompression\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fAdvanced\u003cbr\u003eImage\u003cbr\u003eProcessing\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fAdvanced\u003cbr\u003eImage and\u003cbr\u003eVideo\u003cbr\u003eRetrieval\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fAdvanced\u003cbr\u003eNeural\u003cbr\u003eNetwork\u003cbr\u003eApplications","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fAdvanced Ste\u003cbr\u003eganography\u003cbr\u003eand\u003cbr\u003eWatermarking\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fAdvanced\u003cbr\u003eVision and\u003cbr\u003eImaging","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fAugmented\u003cbr\u003eReality\u003cbr\u003eApplications","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fChaos-based\u003cbr\u003eImage\u002fSignal\u003cbr\u003eEncryption","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fContext-\u003cbr\u003eAware\u003cbr\u003eActivity\u003cbr\u003eRecognition\u003cbr\u003eSystems","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fCurrency\u003cbr\u003eRecognition\u003cbr\u003eand\u003cbr\u003eDetection","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fData Visuali\u003cbr\u003ezation and\u003cbr\u003eAnalytics","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fDigital\u003cbr\u003eImage\u003cbr\u003eProcessing\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fDigital\u003cbr\u003eImaging for\u003cbr\u003eBlood\u003cbr\u003eDiseases","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fDigital\u003cbr\u003eMedia\u003cbr\u003eForensic\u003cbr\u003eDetection","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fFace and\u003cbr\u003eExpression\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fFace\u003cbr\u003erecognition\u003cbr\u003eand analysis","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fGenerative\u003cbr\u003eAdversarial\u003cbr\u003eNetworks and\u003cbr\u003eImage\u003cbr\u003eSynthesis","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fGraph Theory\u003cbr\u003eand\u003cbr\u003eAlgorithms","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fHandwritten\u003cbr\u003eText\u003cbr\u003eRecognition\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fHuman Pose\u003cbr\u003eand Action\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fImage\u003cbr\u003eEnhancement\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fImage\u003cbr\u003eProcessing\u003cbr\u003eand 3D Recon\u003cbr\u003estruction","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fImage\u003cbr\u003eRetrieval\u003cbr\u003eand Classifi\u003cbr\u003ecation\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fImage and\u003cbr\u003eObject\u003cbr\u003eDetection\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fImage and\u003cbr\u003eSignal\u003cbr\u003eDenoising\u003cbr\u003eMethods","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fImage and\u003cbr\u003eVideo\u003cbr\u003eQuality\u003cbr\u003eAssessment","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fImage and\u003cbr\u003eVideo Stabil\u003cbr\u003eization","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fMedical\u003cbr\u003eImage\u003cbr\u003eSegmentation\u003cbr\u003eTechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fMultimodal\u003cbr\u003eMachine\u003cbr\u003eLearning\u003cbr\u003eApplications","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fMusic\u003cbr\u003eTechnology\u003cbr\u003eand Sound\u003cbr\u003eStudies","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fOptical\u003cbr\u003emeasurement\u003cbr\u003eand\u003cbr\u003einterference\u003cbr\u003etechniques","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fRobotic Path\u003cbr\u003ePlanning\u003cbr\u003eAlgorithms","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fVideo\u003cbr\u003eAnalysis and\u003cbr\u003eSummarizatio\u003cbr\u003en","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fVideo\u003cbr\u003eSurveillance\u003cbr\u003eand Tracking\u003cbr\u003eMethods","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition\u002fVisual\u003cbr\u003eAttention\u003cbr\u003eand Saliency\u003cbr\u003eDetection","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial"],"labels":["AI and\u003cbr\u003eMultimedia\u003cbr\u003ein Education","AI in\u003cbr\u003eService\u003cbr\u003eInteractions","AI in cancer\u003cbr\u003edetection","AI-based\u003cbr\u003eProblem\u003cbr\u003eSolving and\u003cbr\u003ePlanning","Advanced\u003cbr\u003eClustering\u003cbr\u003eAlgorithms\u003cbr\u003eResearch","Advanced Com\u003cbr\u003eputational\u003cbr\u003eTechniques\u003cbr\u003eand\u003cbr\u003eApplications","Advanced\u003cbr\u003eGraph Neural\u003cbr\u003eNetworks","Advanced\u003cbr\u003eSoftware\u003cbr\u003eEngineering \u003cbr\u003eMethodologie\u003cbr\u003es","Advanced\u003cbr\u003eTechnologies\u003cbr\u003ein Various\u003cbr\u003eFields","Advanced\u003cbr\u003eText\u003cbr\u003eAnalysis\u003cbr\u003eTechniques","Adversarial\u003cbr\u003eRobustness\u003cbr\u003ein Machine\u003cbr\u003eLearning","Algorithms\u003cbr\u003eand Data\u003cbr\u003eCompression","Anomaly\u003cbr\u003eDetection\u003cbr\u003eTechniques\u003cbr\u003eand\u003cbr\u003eApplications","Artificial\u003cbr\u003eIntelligence\u003cbr\u003eApplications","Artificial\u003cbr\u003eIntelligence\u003cbr\u003ein Games","Authorship\u003cbr\u003eAttribution\u003cbr\u003eand\u003cbr\u003eProfiling","Bayesian\u003cbr\u003eMethods and\u003cbr\u003eMixture\u003cbr\u003eModels","Bayesian\u003cbr\u003eModeling and\u003cbr\u003eCausal\u003cbr\u003eInference","Coding\u003cbr\u003etheory and\u003cbr\u003ecryptography","Cognitive\u003cbr\u003eComputing\u003cbr\u003eand Networks","Cognitive\u003cbr\u003eScience and\u003cbr\u003eMapping","Computationa\u003cbr\u003el Physics\u003cbr\u003eand Python\u003cbr\u003eApplications","Computer\u003cbr\u003eScience and\u003cbr\u003eEngineering","Cryptographi\u003cbr\u003ec Implementa\u003cbr\u003etions and\u003cbr\u003eSecurity","Cryptography\u003cbr\u003eand Data\u003cbr\u003eSecurity","Data\u003cbr\u003eAnalysis\u003cbr\u003ewith R","Data Stream\u003cbr\u003eMining\u003cbr\u003eTechniques","Diverse Inte\u003cbr\u003erdisciplinar\u003cbr\u003ey Research\u003cbr\u003eStudies","Domain\u003cbr\u003eAdaptation\u003cbr\u003eand Few-Shot\u003cbr\u003eLearning","Edcuational\u003cbr\u003eTechnology\u003cbr\u003eSystems","Educational\u003cbr\u003eRobotics and\u003cbr\u003eEngineering","Educational\u003cbr\u003eTechnology\u003cbr\u003eand Pedagogy","Evolutionary\u003cbr\u003eAlgorithms\u003cbr\u003eand\u003cbr\u003eApplications","Experience-\u003cbr\u003eBased\u003cbr\u003eKnowledge\u003cbr\u003eManagement","Explainable\u003cbr\u003eArtificial\u003cbr\u003eIntelligence\u003cbr\u003e(XAI)","Fuzzy Logic\u003cbr\u003eand Control\u003cbr\u003eSystems","Gaussian\u003cbr\u003eProcesses\u003cbr\u003eand Bayesian\u003cbr\u003eInference","Geochemistry\u003cbr\u003eand Geologic\u003cbr\u003eMapping","Hate Speech\u003cbr\u003eand Cyberbul\u003cbr\u003elying\u003cbr\u003eDetection","Imbalanced\u003cbr\u003eData Classif\u003cbr\u003eication\u003cbr\u003eTechniques","Intelligent\u003cbr\u003eTutoring\u003cbr\u003eSystems and\u003cbr\u003eAdaptive\u003cbr\u003eLearning","Internet\u003cbr\u003eTraffic\u003cbr\u003eAnalysis and\u003cbr\u003eSecure\u003cbr\u003eE-voting","Intuitionist\u003cbr\u003eic Fuzzy\u003cbr\u003eSystems\u003cbr\u003eApplications","Law, AI, and\u003cbr\u003eIntellectual\u003cbr\u003eProperty","Linguistic\u003cbr\u003eStudies and\u003cbr\u003eLanguage\u003cbr\u003eAcquisition","Logic,\u003cbr\u003eReasoning,\u003cbr\u003eand\u003cbr\u003eKnowledge","Logic,\u003cbr\u003eprogramming,\u003cbr\u003eand type\u003cbr\u003esystems","Machine\u003cbr\u003eLearning and\u003cbr\u003eAlgorithms","Machine\u003cbr\u003eLearning and\u003cbr\u003eData Classif\u003cbr\u003eication","Machine\u003cbr\u003eLearning and\u003cbr\u003eELM","Machine\u003cbr\u003eLearning in\u003cbr\u003eHealthcare","Mathematical\u003cbr\u003eControl\u003cbr\u003eSystems and\u003cbr\u003eAnalysis","Metaheuristi\u003cbr\u003ec\u003cbr\u003eOptimization\u003cbr\u003eAlgorithms\u003cbr\u003eResearch","Multi-Agent\u003cbr\u003eSystems and\u003cbr\u003eNegotiation","Natural\u003cbr\u003eLanguage\u003cbr\u003eProcessing\u003cbr\u003eTechniques","Neural\u003cbr\u003eNetworks and\u003cbr\u003eApplications","Neural\u003cbr\u003eNetworks and\u003cbr\u003eReservoir\u003cbr\u003eComputing","Organization\u003cbr\u003eal and\u003cbr\u003eEmployee\u003cbr\u003ePerformance","Privacy-\u003cbr\u003ePreserving\u003cbr\u003eTechnologies\u003cbr\u003ein Data","Psychiatry,\u003cbr\u003eMental\u003cbr\u003eHealth,\u003cbr\u003eNeuroscience","Quantum\u003cbr\u003eComputing\u003cbr\u003eAlgorithms\u003cbr\u003eand\u003cbr\u003eArchitecture","Quantum\u003cbr\u003eInformation\u003cbr\u003eand\u003cbr\u003eCryptography","Reinforcemen\u003cbr\u003et Learning\u003cbr\u003ein Robotics","Security and\u003cbr\u003eVerification\u003cbr\u003ein Computing","Seismology\u003cbr\u003eand\u003cbr\u003eEarthquake\u003cbr\u003eStudies","Semantic Web\u003cbr\u003eand\u003cbr\u003eOntologies","Sentiment\u003cbr\u003eAnalysis and\u003cbr\u003eOpinion\u003cbr\u003eMining","Solar\u003cbr\u003eRadiation\u003cbr\u003eand Photovol\u003cbr\u003etaics","Speech\u003cbr\u003eRecognition\u003cbr\u003eand\u003cbr\u003eSynthesis","Speech and\u003cbr\u003edialogue\u003cbr\u003esystems","Statistical\u003cbr\u003eand Computat\u003cbr\u003eional\u003cbr\u003eModeling","Stochastic\u003cbr\u003eGradient\u003cbr\u003eOptimization\u003cbr\u003eTechniques","Target\u003cbr\u003eTracking and\u003cbr\u003eData Fusion\u003cbr\u003ein Sensor\u003cbr\u003eNetworks","Text\u003cbr\u003eReadability\u003cbr\u003eand Simplifi\u003cbr\u003ecation","Text and\u003cbr\u003eDocument Cla\u003cbr\u003essification\u003cbr\u003eTechnologies","Topic\u003cbr\u003eModeling","Wireless\u003cbr\u003eSignal\u003cbr\u003eModulation C\u003cbr\u003elassificatio\u003cbr\u003en","Advanced\u003cbr\u003eData\u003cbr\u003eCompression\u003cbr\u003eTechniques","Advanced\u003cbr\u003eImage\u003cbr\u003eProcessing\u003cbr\u003eTechniques","Advanced\u003cbr\u003eImage and\u003cbr\u003eVideo\u003cbr\u003eRetrieval\u003cbr\u003eTechniques","Advanced\u003cbr\u003eNeural\u003cbr\u003eNetwork\u003cbr\u003eApplications","Advanced Ste\u003cbr\u003eganography\u003cbr\u003eand\u003cbr\u003eWatermarking\u003cbr\u003eTechniques","Advanced\u003cbr\u003eVision and\u003cbr\u003eImaging","Augmented\u003cbr\u003eReality\u003cbr\u003eApplications","Chaos-based\u003cbr\u003eImage\u002fSignal\u003cbr\u003eEncryption","Context-\u003cbr\u003eAware\u003cbr\u003eActivity\u003cbr\u003eRecognition\u003cbr\u003eSystems","Currency\u003cbr\u003eRecognition\u003cbr\u003eand\u003cbr\u003eDetection","Data Visuali\u003cbr\u003ezation and\u003cbr\u003eAnalytics","Digital\u003cbr\u003eImage\u003cbr\u003eProcessing\u003cbr\u003eTechniques","Digital\u003cbr\u003eImaging for\u003cbr\u003eBlood\u003cbr\u003eDiseases","Digital\u003cbr\u003eMedia\u003cbr\u003eForensic\u003cbr\u003eDetection","Face and\u003cbr\u003eExpression\u003cbr\u003eRecognition","Face\u003cbr\u003erecognition\u003cbr\u003eand analysis","Generative\u003cbr\u003eAdversarial\u003cbr\u003eNetworks and\u003cbr\u003eImage\u003cbr\u003eSynthesis","Graph Theory\u003cbr\u003eand\u003cbr\u003eAlgorithms","Handwritten\u003cbr\u003eText\u003cbr\u003eRecognition\u003cbr\u003eTechniques","Human Pose\u003cbr\u003eand Action\u003cbr\u003eRecognition","Image\u003cbr\u003eEnhancement\u003cbr\u003eTechniques","Image\u003cbr\u003eProcessing\u003cbr\u003eand 3D Recon\u003cbr\u003estruction","Image\u003cbr\u003eRetrieval\u003cbr\u003eand Classifi\u003cbr\u003ecation\u003cbr\u003eTechniques","Image and\u003cbr\u003eObject\u003cbr\u003eDetection\u003cbr\u003eTechniques","Image and\u003cbr\u003eSignal\u003cbr\u003eDenoising\u003cbr\u003eMethods","Image and\u003cbr\u003eVideo\u003cbr\u003eQuality\u003cbr\u003eAssessment","Image and\u003cbr\u003eVideo Stabil\u003cbr\u003eization","Medical\u003cbr\u003eImage\u003cbr\u003eSegmentation\u003cbr\u003eTechniques","Multimodal\u003cbr\u003eMachine\u003cbr\u003eLearning\u003cbr\u003eApplications","Music\u003cbr\u003eTechnology\u003cbr\u003eand Sound\u003cbr\u003eStudies","Optical\u003cbr\u003emeasurement\u003cbr\u003eand\u003cbr\u003einterference\u003cbr\u003etechniques","Robotic Path\u003cbr\u003ePlanning\u003cbr\u003eAlgorithms","Video\u003cbr\u003eAnalysis and\u003cbr\u003eSummarizatio\u003cbr\u003en","Video\u003cbr\u003eSurveillance\u003cbr\u003eand Tracking\u003cbr\u003eMethods","Visual\u003cbr\u003eAttention\u003cbr\u003eand Saliency\u003cbr\u003eDetection","Artificial\u003cbr\u003eIntelligence","Computer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial"],"marker":{"coloraxis":"coloraxis","colors":{"dtype":"f8","bdata":"AAAAAAAepUAAAAAAgAbbQAAAAAAgLOdAAAAAAIBP20AAAAAAQNfSQAAAAABASgRBAAAAAMDL1EAAAAAAAP7gQAAAAACAmcNAAAAAAABr20AAAAAAwP3WQAAAAACg3+NAAAAAAIDz5kAAAAAAAAW4QAAAAADAkNVAAAAAAAAmwkAAAAAAQIjdQAAAAAAAOtpAAAAAAOCV5EAAAAAAgE7DQAAAAACAmtZAAAAAAED+3UAAAAAAQNHiQAAAAAAA8tRAAAAAACCo5UAAAAAAADLUQAAAAACA9cZAAAAAAACwoEAAAAAAQKrTQAAAAACgpe5AAAAAAGCm\u002fEAAAAAA4EvjQAAAAADADt1AAAAAAACokUAAAAAAgGHPQAAAAAAgleNAAAAAAADQwEAAAAAAUPD9QAAAAAAAYtdAAAAAAAAR1EAAAAAAgPndQAAAAADAb9ZAAAAAAAA+r0AAAAAAAEDTQAAAAACA1PFAAAAAAGCL4UAAAAAA4AvmQAAAAAAAUtBAAAAAAIAFzkAAAAAAgNDGQAAAAABAVNFAAAAAAICDxUAAAAAAABfnQAAAAABA59xAAAAAAIiEA0EAAAAAaK8BQQAAAADAxtBAAAAAAECX2EAAAAAAAMzlQAAAAAAAp7lAAAAAAICP6UAAAAAAAPb0QAAAAAAAmthAAAAAAMAz1EAAAAAAQIXiQAAAAAAAh\u002fdAAAAAAECR4kAAAAAAIOHhQAAAAAAAB+1AAAAAAGDt4EAAAAAAgFHHQAAAAAAAWr1AAAAAACBy5kAAAAAAgOXDQAAAAAAAodNAAAAAAGDX8kAAAAAAAPHHQAAAAADAQ+hAAAAAAMCH2kAAAAAAwF7pQAAAAABAZetAAAAAAECb6kAAAAAA4BDyQAAAAABA6+VAAAAAAMDz4kAAAAAA4LDlQAAAAAAAeLhAAAAAACBN4kAAAAAAALzMQAAAAACAxNBAAAAAAACWzUAAAAAAwHnoQAAAAACA7t9AAAAAAECu1EAAAAAAgLrKQAAAAADA3OFAAAAAAIBc20AAAAAAQFTeQAAAAADgyudAAAAAAKCY6EAAAAAAgI3SQAAAAADAR\u002fFAAAAAAMAU1kAAAAAAAA+8QAAAAADAK+hAAAAAAIC510AAAAAAQJDwQAAAAACAUetAAAAAAFBc9EAAAAAAwJffQAAAAACAWe1AAAAAAEC00EBLZ60tEqDwQLF7IuYjyudAiK\u002fFNH0o7kA="}},"name":"","parents":["Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fArtificial\u003cbr\u003eIntelligence","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial\u002fComputer\u003cbr\u003eVision and\u003cbr\u003ePattern\u003cbr\u003eRecognition","Inteligencia Artificial","Inteligencia Artificial",""],"values":{"dtype":"f8","bdata":"AAAAAAAepUAAAAAAgAbbQAAAAAAgLOdAAAAAAIBP20AAAAAAQNfSQAAAAABASgRBAAAAAMDL1EAAAAAAAP7gQAAAAACAmcNAAAAAAABr20AAAAAAwP3WQAAAAACg3+NAAAAAAIDz5kAAAAAAAAW4QAAAAADAkNVAAAAAAAAmwkAAAAAAQIjdQAAAAAAAOtpAAAAAAOCV5EAAAAAAgE7DQAAAAACAmtZAAAAAAED+3UAAAAAAQNHiQAAAAAAA8tRAAAAAACCo5UAAAAAAADLUQAAAAACA9cZAAAAAAACwoEAAAAAAQKrTQAAAAACgpe5AAAAAAGCm\u002fEAAAAAA4EvjQAAAAADADt1AAAAAAACokUAAAAAAgGHPQAAAAAAgleNAAAAAAADQwEAAAAAAUPD9QAAAAAAAYtdAAAAAAAAR1EAAAAAAgPndQAAAAADAb9ZAAAAAAAA+r0AAAAAAAEDTQAAAAACA1PFAAAAAAGCL4UAAAAAA4AvmQAAAAAAAUtBAAAAAAIAFzkAAAAAAgNDGQAAAAABAVNFAAAAAAICDxUAAAAAAABfnQAAAAABA59xAAAAAAIiEA0EAAAAAaK8BQQAAAADAxtBAAAAAAECX2EAAAAAAAMzlQAAAAAAAp7lAAAAAAICP6UAAAAAAAPb0QAAAAAAAmthAAAAAAMAz1EAAAAAAQIXiQAAAAAAAh\u002fdAAAAAAECR4kAAAAAAIOHhQAAAAAAAB+1AAAAAAGDt4EAAAAAAgFHHQAAAAAAAWr1AAAAAACBy5kAAAAAAgOXDQAAAAAAAodNAAAAAAGDX8kAAAAAAAPHHQAAAAADAQ+hAAAAAAMCH2kAAAAAAwF7pQAAAAABAZetAAAAAAECb6kAAAAAA4BDyQAAAAABA6+VAAAAAAMDz4kAAAAAA4LDlQAAAAAAAeLhAAAAAACBN4kAAAAAAALzMQAAAAACAxNBAAAAAAACWzUAAAAAAwHnoQAAAAACA7t9AAAAAAECu1EAAAAAAgLrKQAAAAADA3OFAAAAAAIBc20AAAAAAQFTeQAAAAADgyudAAAAAAKCY6EAAAAAAgI3SQAAAAADAR\u002fFAAAAAAMAU1kAAAAAAAA+8QAAAAADAK+hAAAAAAIC510AAAAAAQJDwQAAAAACAUetAAAAAAFBc9EAAAAAAwJffQAAAAACAWe1AAAAAAEC00EAAAAAAv0lFQQAAAAB\u002frDRBAAAAgP6fT0E="},"type":"treemap","insidetextfont":{"size":24},"textfont":{"size":24},"textinfo":"label+percent parent"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"coloraxis":{"colorbar":{"title":{"text":"Publicaciones"}},"colorscale":[[0.0,"rgb(247,251,255)"],[0.125,"rgb(222,235,247)"],[0.25,"rgb(198,219,239)"],[0.375,"rgb(158,202,225)"],[0.5,"rgb(107,174,214)"],[0.625,"rgb(66,146,198)"],[0.75,"rgb(33,113,181)"],[0.875,"rgb(8,81,156)"],[1.0,"rgb(8,48,107)"]],"showscale":false},"legend":{"tracegroupgap":0},"title":{"text":"Mapa jer\u00e1rquico de temas: distribuci\u00f3n de publicaciones por subcampo","font":{"size":20}},"font":{"size":14},"height":800},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('57dc2b24-1f8c-4455-8578-0fb800c07f9c');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>El mapa jerárquico revela que el campo se divide en dos grandes subcampos: <strong>Inteligencia Artificial</strong> (en sentido estricto) y <strong>Computer Vision and Pattern Recognition</strong>. El subcampo de IA es claramente dominante en volumen, con temas de NLP, razonamiento y aprendizaje automático general. El subcampo de Visión engloba técnicas más aplicadas como el denoising de imágenes, la detección de objetos y la síntesis generativa. Dentro de cada subcampo, los temas más grandes reflejan áreas de investigación fundamentales: en IA, el aprendizaje automático y el razonamiento; en Visión, la síntesis generativa y la detección de objetos. El mapa también muestra que hay una gran cantidad de temas con volúmenes menores, lo que sugiere una diversidad de líneas de investigación dentro del campo.</p>
+<hr>
+</section>
+<section id="pregunta-4---cómo-se-distribuyen-geográficamente-las-publicaciones" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-4---cómo-se-distribuyen-geográficamente-las-publicaciones">Pregunta 4 - ¿Cómo se distribuyen geográficamente las publicaciones?</h2>
+<p>La producción científica nunca ha sido homogénea. Algunos países lideran la investigación en IA por su inversión en universidades, financiamiento gubernamental o ecosistema tecnológico. Este análisis usa datos geográficos acumulados.</p>
+<div id="cell-q4-mapa" class="cell" data-execution_count="8">
+<div id="q4-mapa" class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.5.0.min.js" integrity="sha256-fHbNLP+GlIXN+efbQec78UkemUz3NJp7UmfGxC1tNxs=" crossorigin="anonymous"></script>                <div id="479e6aa3-ac92-479b-824e-e0440fb12a3d" class="plotly-graph-div" style="height:480px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("479e6aa3-ac92-479b-824e-e0440fb12a3d")) {                    Plotly.newPlot(                        "479e6aa3-ac92-479b-824e-e0440fb12a3d",                        [{"coloraxis":"coloraxis","customdata":[[23,"ABW"],[157,"AFG"],[31,"AGO"],[348,"ALB"],[8,"AND"],[7096,"ARE"],[4611,"ARG"],[647,"ARM"],[1,"ASM"],[16,"ATG"],[61117,"AUS"],[17421,"AUT"],[707,"AZE"],[402,"BDI"],[20211,"BEL"],[148,"BEN"],[116,"BFA"],[7456,"BGD"],[4274,"BGR"],[833,"BHR"],[16,"BHS"],[732,"BIH"],[1259,"BLR"],[4,"BLZ"],[45,"BMU"],[235,"BOL"],[38407,"BRA"],[21,"BRB"],[306,"BRN"],[39,"BTN"],[265,"BWA"],[11,"CAF"],[79366,"CAN"],[24676,"CHE"],[4666,"CHL"],[620877,"CHN"],[163,"CIV"],[791,"CMR"],[96,"COD"],[28,"COG"],[4673,"COL"],[14,"CPV"],[455,"CRI"],[1069,"CUB"],[4,"CUW"],[319,"CYM"],[2249,"CYP"],[14178,"CZE"],[108371,"DEU"],[13,"DJI"],[2,"DMA"],[12739,"DNK"],[105,"DOM"],[7194,"DZA"],[1450,"ECU"],[14427,"EGY"],[22,"ERI"],[51301,"ESP"],[1619,"EST"],[1172,"ETH"],[14437,"FIN"],[211,"FJI"],[80978,"FRA"],[26,"FRO"],[1,"FSM"],[24,"GAB"],[133247,"GBR"],[336,"GEO"],[1157,"GHA"],[4,"GIB"],[4,"GIN"],[71,"GLP"],[20,"GMB"],[5,"GNB"],[3,"GNQ"],[16758,"GRC"],[10,"GRD"],[9,"GRL"],[119,"GTM"],[27,"GUF"],[23,"GUM"],[19,"GUY"],[24706,"HKG"],[62,"HND"],[3528,"HRV"],[5,"HTI"],[7226,"HUN"],[64117,"IDN"],[5,"IMN"],[133916,"IND"],[9973,"IRL"],[26190,"IRN"],[9201,"IRQ"],[607,"ISL"],[18523,"ISR"],[65789,"ITA"],[231,"JAM"],[1,"JEY"],[6142,"JOR"],[123568,"JPN"],[1636,"KAZ"],[863,"KEN"],[106,"KGZ"],[326,"KHM"],[3,"KIR"],[15,"KNA"],[57487,"KOR"],[1209,"KWT"],[23,"LAO"],[1871,"LBN"],[33,"LBR"],[527,"LBY"],[1,"LCA"],[53,"LIE"],[2131,"LKA"],[41,"LSO"],[1764,"LTU"],[2205,"LUX"],[1225,"LVA"],[4307,"MAC"],[6107,"MAR"],[10,"MCO"],[364,"MDA"],[94,"MDG"],[23,"MDV"],[14826,"MEX"],[1051,"MKD"],[58,"MLI"],[674,"MLT"],[837,"MMR"],[365,"MNE"],[672,"MNG"],[189,"MOZ"],[34,"MRT"],[13,"MSR"],[13,"MTQ"],[237,"MUS"],[142,"MWI"],[21031,"MYS"],[22,"NCL"],[79,"NER"],[5390,"NGA"],[72,"NIC"],[2,"NIU"],[34631,"NLD"],[9956,"NOR"],[1837,"NPL"],[7986,"NZL"],[1185,"OMN"],[13922,"PAK"],[143,"PAN"],[1413,"PER"],[2862,"PHL"],[3,"PLW"],[39,"PNG"],[21932,"POL"],[588,"PRI"],[88,"PRK"],[13437,"PRT"],[160,"PRY"],[870,"PSE"],[32,"PYF"],[2416,"QAT"],[119,"REU"],[9707,"ROU"],[33452,"RUS"],[205,"RWA"],[16680,"SAU"],[631,"SDN"],[264,"SEN"],[29553,"SGP"],[2,"SJM"],[19,"SLE"],[65,"SLV"],[14,"SMR"],[38,"SOM"],[3949,"SRB"],[641,"SSD"],[5,"STP"],[4,"SUR"],[4629,"SVK"],[4315,"SVN"],[20061,"SWE"],[20,"SWZ"],[1,"SXM"],[1,"SYC"],[400,"SYR"],[7,"TCA"],[28,"TCD"],[37,"TGO"],[8451,"THA"],[713,"TJK"],[15,"TKM"],[9,"TLS"],[2,"TON"],[158,"TTO"],[6509,"TUN"],[24400,"TUR"],[43386,"TWN"],[367,"TZA"],[332,"UGA"],[7247,"UKR"],[726,"URY"],[507395,"USA"],[854,"UZB"],[10,"VAT"],[966,"VEN"],[154,"VGB"],[8,"VIR"],[7291,"VNM"],[5,"VUT"],[3,"WSM"],[1040,"YEM"],[6616,"ZAF"],[163,"ZMB"],[316,"ZWE"]],"geo":"geo","hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eTotal publicaciones=%{z:,}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Aruba","Afghanistan","Angola","Albania","Andorra","United Arab Emirates","Argentina","Armenia","American Samoa","Antigua and Barbuda","Australia","Austria","Azerbaijan","Burundi","Belgium","Benin","Burkina Faso","Bangladesh","Bulgaria","Bahrain","Bahamas","Bosnia and Herzegovina","Belarus","Belize","Bermuda","Bolivia, Plurinational State of","Brazil","Barbados","Brunei Darussalam","Bhutan","Botswana","Central African Republic","Canada","Switzerland","Chile","China","C\u00f4te d'Ivoire","Cameroon","Congo, The Democratic Republic of the","Congo","Colombia","Cabo Verde","Costa Rica","Cuba","Cura\u00e7ao","Cayman Islands","Cyprus","Czechia","Germany","Djibouti","Dominica","Denmark","Dominican Republic","Algeria","Ecuador","Egypt","Eritrea","Spain","Estonia","Ethiopia","Finland","Fiji","France","Faroe Islands","Micronesia, Federated States of","Gabon","United Kingdom","Georgia","Ghana","Gibraltar","Guinea","Guadeloupe","Gambia","Guinea-Bissau","Equatorial Guinea","Greece","Grenada","Greenland","Guatemala","French Guiana","Guam","Guyana","Hong Kong","Honduras","Croatia","Haiti","Hungary","Indonesia","Isle of Man","India","Ireland","Iran, Islamic Republic of","Iraq","Iceland","Israel","Italy","Jamaica","Jersey","Jordan","Japan","Kazakhstan","Kenya","Kyrgyzstan","Cambodia","Kiribati","Saint Kitts and Nevis","Korea, Republic of","Kuwait","Lao People's Democratic Republic","Lebanon","Liberia","Libya","Saint Lucia","Liechtenstein","Sri Lanka","Lesotho","Lithuania","Luxembourg","Latvia","Macao","Morocco","Monaco","Moldova, Republic of","Madagascar","Maldives","Mexico","North Macedonia","Mali","Malta","Myanmar","Montenegro","Mongolia","Mozambique","Mauritania","Montserrat","Martinique","Mauritius","Malawi","Malaysia","New Caledonia","Niger","Nigeria","Nicaragua","Niue","Netherlands","Norway","Nepal","New Zealand","Oman","Pakistan","Panama","Peru","Philippines","Palau","Papua New Guinea","Poland","Puerto Rico","Korea, Democratic People's Republic of","Portugal","Paraguay","Palestine, State of","French Polynesia","Qatar","R\u00e9union","Romania","Russian Federation","Rwanda","Saudi Arabia","Sudan","Senegal","Singapore","Svalbard and Jan Mayen","Sierra Leone","El Salvador","San Marino","Somalia","Serbia","South Sudan","Sao Tome and Principe","Suriname","Slovakia","Slovenia","Sweden","Eswatini","Sint Maarten (Dutch part)","Seychelles","Syrian Arab Republic","Turks and Caicos Islands","Chad","Togo","Thailand","Tajikistan","Turkmenistan","Timor-Leste","Tonga","Trinidad and Tobago","Tunisia","T\u00fcrkiye","Taiwan, Province of China","Tanzania, United Republic of","Uganda","Ukraine","Uruguay","United States","Uzbekistan","Holy See (Vatican City State)","Venezuela, Bolivarian Republic of","Virgin Islands, British","Virgin Islands, U.S.","Viet Nam","Vanuatu","Samoa","Yemen","South Africa","Zambia","Zimbabwe"],"locations":["ABW","AFG","AGO","ALB","AND","ARE","ARG","ARM","ASM","ATG","AUS","AUT","AZE","BDI","BEL","BEN","BFA","BGD","BGR","BHR","BHS","BIH","BLR","BLZ","BMU","BOL","BRA","BRB","BRN","BTN","BWA","CAF","CAN","CHE","CHL","CHN","CIV","CMR","COD","COG","COL","CPV","CRI","CUB","CUW","CYM","CYP","CZE","DEU","DJI","DMA","DNK","DOM","DZA","ECU","EGY","ERI","ESP","EST","ETH","FIN","FJI","FRA","FRO","FSM","GAB","GBR","GEO","GHA","GIB","GIN","GLP","GMB","GNB","GNQ","GRC","GRD","GRL","GTM","GUF","GUM","GUY","HKG","HND","HRV","HTI","HUN","IDN","IMN","IND","IRL","IRN","IRQ","ISL","ISR","ITA","JAM","JEY","JOR","JPN","KAZ","KEN","KGZ","KHM","KIR","KNA","KOR","KWT","LAO","LBN","LBR","LBY","LCA","LIE","LKA","LSO","LTU","LUX","LVA","MAC","MAR","MCO","MDA","MDG","MDV","MEX","MKD","MLI","MLT","MMR","MNE","MNG","MOZ","MRT","MSR","MTQ","MUS","MWI","MYS","NCL","NER","NGA","NIC","NIU","NLD","NOR","NPL","NZL","OMN","PAK","PAN","PER","PHL","PLW","PNG","POL","PRI","PRK","PRT","PRY","PSE","PYF","QAT","REU","ROU","RUS","RWA","SAU","SDN","SEN","SGP","SJM","SLE","SLV","SMR","SOM","SRB","SSD","STP","SUR","SVK","SVN","SWE","SWZ","SXM","SYC","SYR","TCA","TCD","TGO","THA","TJK","TKM","TLS","TON","TTO","TUN","TUR","TWN","TZA","UGA","UKR","URY","USA","UZB","VAT","VEN","VGB","VIR","VNM","VUT","WSM","YEM","ZAF","ZMB","ZWE"],"name":"","z":{"dtype":"i4","bdata":"FwAAAJ0AAAAfAAAAXAEAAAgAAAC4GwAAAxIAAIcCAAABAAAAEAAAAL3uAAANRAAAwwIAAJIBAADzTgAAlAAAAHQAAAAgHQAAshAAAEEDAAAQAAAA3AIAAOsEAAAEAAAALQAAAOsAAAAHlgAAFQAAADIBAAAnAAAACQEAAAsAAAAGNgEAZGAAADoSAABNeQkAowAAABcDAABgAAAAHAAAAEESAAAOAAAAxwEAAC0EAAAEAAAAPwEAAMkIAABiNwAAU6cBAA0AAAACAAAAwzEAAGkAAAAaHAAAqgUAAFs4AAAWAAAAZcgAAFMGAACUBAAAZTgAANMAAABSPAEAGgAAAAEAAAAYAAAAfwgCAFABAACFBAAABAAAAAQAAABHAAAAFAAAAAUAAAADAAAAdkEAAAoAAAAJAAAAdwAAABsAAAAXAAAAEwAAAIJgAAA+AAAAyA0AAAUAAAA6HAAAdfoAAAUAAAAcCwIA9SYAAE5mAADxIwAAXwIAAFtIAAD9AAEA5wAAAAEAAAD+FwAAsOIBAGQGAABfAwAAagAAAEYBAAADAAAADwAAAI\u002fgAAC5BAAAFwAAAE8HAAAhAAAADwIAAAEAAAA1AAAAUwgAACkAAADkBgAAnQgAAMkEAADTEAAA2xcAAAoAAABsAQAAXgAAABcAAADqOQAAGwQAADoAAACiAgAARQMAAG0BAACgAgAAvQAAACIAAAANAAAADQAAAO0AAACOAAAAJ1IAABYAAABPAAAADhUAAEgAAAACAAAAR4cAAOQmAAAtBwAAMh8AAKEEAABiNgAAjwAAAIUFAAAuCwAAAwAAACcAAACsVQAATAIAAFgAAAB9NAAAoAAAAGYDAAAgAAAAcAkAAHcAAADrJQAArIIAAM0AAAAoQQAAdwIAAAgBAABxcwAAAgAAABMAAABBAAAADgAAACYAAABtDwAAgQIAAAUAAAAEAAAAFRIAANsQAABdTgAAFAAAAAEAAAABAAAAkAEAAAcAAAAcAAAAJQAAAAMhAADJAgAADwAAAAkAAAACAAAAngAAAG0ZAABQXwAAeqkAAG8BAABMAQAATxwAANYCAAADvgcAVgMAAAoAAADGAwAAmgAAAAgAAAB7HAAABQAAAAMAAAAQBAAA2BkAAKMAAAA8AQAA"},"type":"choropleth"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"geo":{"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"projection":{"type":"natural earth"},"center":{}},"coloraxis":{"colorbar":{"title":{"text":"Publicaciones"},"tickformat":","},"colorscale":[[0.0,"rgb(255,255,204)"],[0.125,"rgb(255,237,160)"],[0.25,"rgb(254,217,118)"],[0.375,"rgb(254,178,76)"],[0.5,"rgb(253,141,60)"],[0.625,"rgb(252,78,42)"],[0.75,"rgb(227,26,28)"],[0.875,"rgb(189,0,38)"],[1.0,"rgb(128,0,38)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Distribuci\u00f3n global de publicaciones en IA (1950 \u2013 2026)","font":{"size":16}},"font":{"size":12},"height":480},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('479e6aa3-ac92-479b-824e-e0440fb12a3d');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>El mapa muestra una concentración brutal de la producción científica en IA en tres grandes bloques: <strong>Estados Unidos</strong>, <strong>China</strong> e <strong>India</strong>, con Europa Occidental un poco por detrás (encabezada por Reino Unido y Alemania). La intensidad de China es especialmente notable: en las últimas dos décadas pasó de ser un actor marginal a competir directamente con EE. UU. por el primer puesto. La mayor parte del hemisferio sur y África permanecen prácticamente ausentes del mapa, lo que señala una profunda brecha global en acceso al conocimiento y recursos.</p>
+<div id="cell-q4-barras-paises" class="cell" data-execution_count="9">
+<div id="q4-barras-paises" class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.5.0.min.js" integrity="sha256-fHbNLP+GlIXN+efbQec78UkemUz3NJp7UmfGxC1tNxs=" crossorigin="anonymous"></script>                <div id="555911c2-d06e-4c3a-80e1-b071bea9a8e7" class="plotly-graph-div" style="height:500px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("555911c2-d06e-4c3a-80e1-b071bea9a8e7")) {                    Plotly.newPlot(                        "555911c2-d06e-4c3a-80e1-b071bea9a8e7",                        [{"hovertemplate":"Publicaciones en 2024=%{marker.color}\u003cbr\u003e=%{y}\u003cbr\u003etext=%{text}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":{"dtype":"i4","bdata":"NAoAAAcLAAA4CwAAeg8AAKAQAAAmEQAAxBEAAAcSAADIFQAA\u002fhcAAHodAAB+JwAAp0MAAKFjAAB29gAA"},"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","orientation":"h","showlegend":false,"text":["2,612","2,823","2,872","3,962","4,256","4,390","4,548","4,615","5,576","6,142","7,546","10,110","17,319","25,505","63,094"],"textposition":"outside","x":{"dtype":"i4","bdata":"NAoAAAcLAAA4CwAAeg8AAKAQAAAmEQAAxBEAAAcSAADIFQAA\u002fhcAAHodAAB+JwAAp0MAAKFjAAB29gAA"},"xaxis":"x","y":["Russian Federation","Hong Kong","Spain","Australia","Italy","Canada","France","Korea, Republic of","Japan","Germany","United Kingdom","Indonesia","India","United States","China"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"N\u00famero de publicaciones"},"tickfont":{"size":12}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":""},"tickfont":{"size":12}},"coloraxis":{"colorbar":{"title":{"text":"Publicaciones en 2024"}},"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"showscale":false},"legend":{"tracegroupgap":0},"title":{"text":"Top 15 pa\u00edses por publicaciones en IA (2024)","font":{"size":16}},"barmode":"relative","font":{"size":12},"margin":{"l":160},"height":500},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('555911c2-d06e-4c3a-80e1-b071bea9a8e7');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>El ranking de 2024 consolida lo que el mapa ya sugería: <strong>China</strong> lidera por un margen enorme, duplicando las publicaciones de EE. UU. La India aparece en un sólido tercer lugar, reflejando el fuerte impulso de su ecosistema tecnológico y universitario. El grupo europeo (Reino Unido, Alemania, Francia, Italia, España) es competitivo individualmente pero fragmentado. Países como Canadá, Japón y Corea del Sur también destacan, mostrando que la innovación en IA no es exclusiva de los gigantes. Sin embargo, la ausencia de países de África y América Latina en el top 15 subraya la necesidad de políticas globales para democratizar el acceso a la investigación y fomentar la colaboración internacional.</p>
+<hr>
+</section>
+<section id="pregunta-5---hay-correlación-entre-el-volumen-de-publicaciones-y-su-impacto" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-5---hay-correlación-entre-el-volumen-de-publicaciones-y-su-impacto">Pregunta 5 - ¿Hay correlación entre el volumen de publicaciones y su impacto?</h2>
+<p>Esta pregunta tiene un matiz importante: los papers acumulan citas con el tiempo, por lo que los artículos recientes parecen tener menos impacto aunque sean igualmente influyentes. Para una comparación justa, el análisis se limita a los años <strong>1980–2022</strong>, donde los papers ya tienen suficiente tiempo de exposición para haber acumulado citas representativas.</p>
+<div id="cell-q5-dual-axis" class="cell" data-execution_count="10">
+<div id="q5-dual-axis" class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.5.0.min.js" integrity="sha256-fHbNLP+GlIXN+efbQec78UkemUz3NJp7UmfGxC1tNxs=" crossorigin="anonymous"></script>                <div id="1c6f729f-3aee-4623-8287-f72f9f51c8c4" class="plotly-graph-div" style="height:520px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("1c6f729f-3aee-4623-8287-f72f9f51c8c4")) {                    Plotly.newPlot(                        "1c6f729f-3aee-4623-8287-f72f9f51c8c4",                        [{"marker":{"color":"rgba(76, 114, 176, 0.55)","line":{"width":0}},"name":"Total publicaciones","x":{"dtype":"i2","bdata":"vAe9B74HvwfAB8EHwgfDB8QHxQfGB8cHyAfJB8oHywfMB80HzgfPB9AH0QfSB9MH1AfVB9YH1wfYB9kH2gfbB9wH3QfeB98H4AfhB+IH4wfkB+UH5gc="},"y":{"dtype":"i4","bdata":"XyUAALolAACmJwAAuSsAADstAABWMAAAnDYAAIk8AAD5QgAAXUgAAENSAACNVwAArl8AAHJkAACjbAAAhWwAAL15AAD9eAAAhYMAAOuMAAB0pwAAY7YAADF9AQCXOwEAjz0BAAh6AQCslQEA6aMBACK+AQCE2wEAIQACAOz1AQANAAIAgxMCAJAWAgBwFgIAXicCAB4kAgDYSQIAaYYCADSPAgAYnAIAn5kCAA=="},"type":"bar","xaxis":"x","yaxis":"y"},{"line":{"color":"#DD8452","width":2.5},"marker":{"size":6},"mode":"lines+markers","name":"Mediana de citas por paper","x":{"dtype":"i2","bdata":"vAe9B74HvwfAB8EHwgfDB8QHxQfGB8cHyAfJB8oHywfMB80HzgfPB9AH0QfSB9MH1AfVB9YH1wfYB9kH2gfbB9wH3QfeB98H4AfhB+IH4wfkB+UH5gc="},"y":{"dtype":"f8","bdata":"AAAAAAAALEAAAAAAAAAwQAAAAAAAACpAAAAAAAAAMEAAAAAAAAA2QAAAAAAAADRAAAAAAAAAPEAAAAAAAIBAQAAAAAAAgERAAAAAAACASkAAAAAAAIBPQAAAAAAAoFBAAAAAAABgUUAAAAAAAMBSQAAAAAAAoFZAAAAAAAAAV0AAAAAAAMBYQAAAAAAAgFZAAAAAAADAWEAAAAAAAKBdQAAAAAAAQF5AAAAAAADAXEAAAAAAAIBYQAAAAAAA4FhAAAAAAADAWUAAAAAAAABcQAAAAAAAQFlAAAAAAADAVUAAAAAAAEBVQAAAAAAAQFVAAAAAAABATEAAAAAAAABKQAAAAAAAgEpAAAAAAACAT0AAAAAAAKBSQAAAAAAAAFNAAAAAAACAU0AAAAAAAEBXQAAAAAAAwFxAAAAAAADAW0AAAAAAAMBbQAAAAAAAgFhAAAAAAAAgU0A="},"type":"scatter","xaxis":"x","yaxis":"y2"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,0.94],"title":{"font":{"size":14},"text":"A\u00f1o"},"tickfont":{"size":12}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"font":{"size":14},"text":"Total de publicaciones"},"tickfont":{"size":12}},"yaxis2":{"anchor":"x","overlaying":"y","side":"right","title":{"font":{"size":14},"text":"Mediana de citas por paper"},"tickfont":{"size":12}},"title":{"font":{"size":16},"text":"Volumen de publicaciones vs. impacto por paper (1980\u20132022)","x":0.5,"xanchor":"center","y":0.98,"yanchor":"top"},"font":{"size":12},"legend":{"orientation":"h","yanchor":"bottom","y":1.12,"xanchor":"center","x":0.5},"margin":{"t":100,"b":60},"height":520,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('1c6f729f-3aee-4623-8287-f72f9f51c8c4');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>El gráfico revela una relación aparentemente paradójica: a medida que el <strong>volumen de publicaciones aumenta</strong> (barras azules, que escalan dramáticamente entrando al nuevo siglo), la <strong>mediana de citas por paper</strong> (línea naranja) también sube hasta aproximadamente 2005 y luego cae en picado por un tiempo, para luego estabilizarse en un nivel algo inferior al de los 90s. Esto se puede interpretar de varias formas: el aumento masivo de papers podría estar diluyendo la atención, haciendo que cada artículo reciba menos citas en promedio. Sin embargo, también es posible que el crecimiento explosivo haya traído consigo una mayor diversidad de temas y calidad variable, lo que podría explicar la caída en la mediana de citas. Además, muchas de estas subidas coinciden con los booms de interés en el área, lo que puede significar que cuando el área se estabiliza, la atención se distribuye de manera más uniforme, y hay menos citas. En cualquier caso, el gráfico sugiere que el impacto por paper no crece al mismo ritmo que el volumen, lo que plantea preguntas sobre la sostenibilidad del modelo actual de publicación científica.</p>
+<hr>
+</section>
+<section id="pregunta-6---la-colaboración-internacional-se-asocia-con-mayor-impacto" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-6---la-colaboración-internacional-se-asocia-con-mayor-impacto">Pregunta 6 - ¿La colaboración internacional se asocia con mayor impacto?</h2>
+<p>Un paper con autores de varios países requiere más coordinación, pero también combina perspectivas y redes de difusión más amplias. ¿Se traduce eso en más citas?</p>
+<div id="cell-q6-violin" class="cell" data-execution_count="11">
+<div id="q6-violin" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-6eec5863cd294395a98a5402b3a0db11.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-6eec5863cd294395a98a5402b3a0db11.vega-embed details,
+  #altair-viz-6eec5863cd294395a98a5402b3a0db11.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-6eec5863cd294395a98a5402b3a0db11"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-6eec5863cd294395a98a5402b3a0db11") {
+      outputDiv = document.getElementById("altair-viz-6eec5863cd294395a98a5402b3a0db11");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 14}, "title": {"fontSize": 16}}, "data": {"name": "data-12f745d44cc3c33097e13083d1edb9c3"}, "mark": {"type": "bar"}, "encoding": {"color": {"field": "Colaboraci\u00f3n", "legend": null, "scale": {"domain": ["Internacional", "Dom\u00e9stica"], "range": ["#4C72B0", "#DD8452"]}, "type": "nominal"}, "tooltip": [{"field": "Colaboraci\u00f3n", "type": "nominal"}, {"field": "Mediana de citas", "format": ",", "type": "quantitative"}], "x": {"field": "Mediana de citas", "title": "Mediana de citas", "type": "quantitative"}, "y": {"field": "Colaboraci\u00f3n", "sort": {"field": "Mediana de citas", "order": "descending"}, "title": "", "type": "nominal"}}, "height": 400, "title": "Mediana de citas por tipo de colaboraci\u00f3n: internacional vs. dom\u00e9stica", "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-12f745d44cc3c33097e13083d1edb9c3": [{"Colaboraci\u00f3n": "Dom\u00e9stica", "Mediana de citas": 45.0}, {"Colaboraci\u00f3n": "Internacional", "Mediana de citas": 79.0}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>La diferencia es llamativa. Los papers con co-autoría internacional tienen una <strong>mediana de 79 citas</strong>, frente a las <strong>45 citas</strong> de los papers domésticos. Básicamente <strong>1,75 veces más</strong>. Esto sugiere que la colaboración entre países no solo amplía la red de difusión del trabajo, sino que probablemente también eleva la calidad percibida y la relevancia global del tema.</p>
+<div id="cell-q6-paises-buckets" class="cell" data-execution_count="12">
+<div id="q6-paises-buckets" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-70e1910a09a14e00b8709fbb784ac168.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-70e1910a09a14e00b8709fbb784ac168.vega-embed details,
+  #altair-viz-70e1910a09a14e00b8709fbb784ac168.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-70e1910a09a14e00b8709fbb784ac168"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-70e1910a09a14e00b8709fbb784ac168") {
+      outputDiv = document.getElementById("altair-viz-70e1910a09a14e00b8709fbb784ac168");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 14}, "title": {"fontSize": 16}}, "layer": [{"mark": {"type": "bar", "color": "#4C72B0"}, "encoding": {"tooltip": [{"field": "N\u00b0 de pa\u00edses", "type": "ordinal"}, {"field": "mediana", "format": ",", "title": "Mediana de citas", "type": "quantitative"}], "x": {"field": "N\u00b0 de pa\u00edses", "title": "N\u00famero de pa\u00edses en el paper", "type": "nominal"}, "y": {"field": "mediana", "title": "Citas", "type": "quantitative"}}}, {"mark": {"type": "text", "color": "black", "dy": -10}, "encoding": {"text": {"field": "mediana", "format": ".0f", "type": "quantitative"}, "tooltip": [{"field": "N\u00b0 de pa\u00edses", "type": "ordinal"}, {"field": "mediana", "format": ",", "title": "Mediana de citas", "type": "quantitative"}], "x": {"field": "N\u00b0 de pa\u00edses", "title": "N\u00famero de pa\u00edses en el paper", "type": "nominal"}, "y": {"field": "mediana", "title": "Citas", "type": "quantitative"}}}, {"mark": {"type": "line", "color": "#DD8452", "point": true}, "encoding": {"tooltip": [{"field": "N\u00b0 de pa\u00edses", "type": "ordinal"}, {"field": "p75", "format": ",", "title": "Percentil 75", "type": "quantitative"}], "x": {"field": "N\u00b0 de pa\u00edses", "title": "N\u00famero de pa\u00edses en el paper", "type": "nominal"}, "y": {"field": "p75", "title": "Citas", "type": "quantitative"}}}], "data": {"name": "data-0a5bbc80aea657c0f92e929d831b5ccf"}, "height": 400, "title": "Impacto por n\u00famero de pa\u00edses colaboradores", "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-0a5bbc80aea657c0f92e929d831b5ccf": [{"N\u00b0 de pa\u00edses": "1 pa\u00eds", "mediana": 61.0, "p75": 120.0, "conteo": 32884}, {"N\u00b0 de pa\u00edses": "2 pa\u00edses", "mediana": 79.0, "p75": 142.0, "conteo": 6211}, {"N\u00b0 de pa\u00edses": "3 pa\u00edses", "mediana": 79.0, "p75": 142.75, "conteo": 1262}, {"N\u00b0 de pa\u00edses": "4 pa\u00edses", "mediana": 78.0, "p75": 131.5, "conteo": 299}, {"N\u00b0 de pa\u00edses": "5+ pa\u00edses", "mediana": 86.0, "p75": 177.5, "conteo": 155}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>La relación es casi perfectamente monotónica: a mayor número de países involucrados en un paper, mayor es su impacto medido en citas. Un paper con autores de <strong>5 o más países</strong> tiene una mediana de citas significativamente superior al de un solo país. El percentil 75 (línea naranja) también crece, indicando que no son solo algunos outliers los que inflan la cifra: toda la distribución se desplaza hacia arriba. Esto refuerza el argumento a favor de fomentar redes de colaboración internacional en investigación.</p>
+<hr>
+</section>
+<section id="pregunta-7---publicar-en-open-access-genera-ventaja-en-citas" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-7---publicar-en-open-access-genera-ventaja-en-citas">Pregunta 7 - ¿Publicar en Open Access genera ventaja en citas?</h2>
+<p>El acceso abierto (OA) permite que cualquier persona, en cualquier parte del mundo, lea un paper sin pagar. Intuitivamente, más lectores debería traducirse en más citas. Pero el tipo de OA importa: no es lo mismo una revista Gold OA (pago de procesamiento por parte del autor) que un preprint o un repositorio. OpenAlex clasifica el OA en varias categorías, que son:</p>
+<ol type="1">
+<li><strong>Gold</strong>: Revistas que solo publican en abierto, con un modelo de negocio basado en APC (Article Processing Charges).</li>
+<li><strong>Green</strong>: Papers depositados en repositorios o preprints, que pueden ser versiones post-print o pre-print.</li>
+<li><strong>Hybrid</strong>: Revistas de pago que ofrecen la opción de publicar en abierto mediante el pago de una tarifa.</li>
+<li><strong>Diamond</strong>: Revistas que publican en abierto sin cobrar a los autores (sin APC).</li>
+<li><strong>Bronze</strong>: Papers que están disponibles en abierto pero sin una licencia clara, a menudo debido a acuerdos temporales o políticas editoriales.</li>
+<li><strong>Closed</strong>: Papers sin acceso abierto, solo disponibles a través de suscripción o pago.</li>
+</ol>
+<p>Con esto, el siguiente gráfico compara la mediana de citas por tipo de OA.</p>
+<div id="cell-q7-por-tipo" class="cell" data-execution_count="13">
+<div id="q7-por-tipo" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-a27a74eeca384b8e88e91aa4792f3b86.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-a27a74eeca384b8e88e91aa4792f3b86.vega-embed details,
+  #altair-viz-a27a74eeca384b8e88e91aa4792f3b86.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-a27a74eeca384b8e88e91aa4792f3b86"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-a27a74eeca384b8e88e91aa4792f3b86") {
+      outputDiv = document.getElementById("altair-viz-a27a74eeca384b8e88e91aa4792f3b86");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 13, "titleFontSize": 15}, "title": {"fontSize": 16}}, "layer": [{"mark": {"type": "bar"}, "encoding": {"color": {"field": "Tipo de acceso", "legend": null, "scale": {"domain": ["Gold\n(Revista OA pura)", "Green\n(Repositorio/preprint)", "Hybrid\n(OA opcional en revista de pago)", "Diamond\n(OA sin coste para el autor)", "Bronze\n(OA temporal o informal)", "Cerrado\n(Sin OA)"], "range": ["#2ca02c", "#98df8a", "#1f77b4", "#aec7e8", "#ffbb78", "#d62728"]}, "type": "nominal"}, "tooltip": [{"field": "Tipo de acceso", "type": "nominal"}, {"field": "mediana", "format": ",", "type": "quantitative"}], "x": {"field": "mediana", "title": "Mediana de citas por paper", "type": "quantitative"}, "y": {"field": "Tipo de acceso", "sort": {"field": "mediana", "order": "descending"}, "title": "", "type": "nominal"}}, "title": "Mediana de citas seg\u00fan tipo de acceso abierto"}, {"mark": {"type": "text", "align": "left", "color": "black", "dx": 5, "fontSize": 14}, "encoding": {"color": {"field": "Tipo de acceso", "legend": null, "scale": {"domain": ["Gold\n(Revista OA pura)", "Green\n(Repositorio/preprint)", "Hybrid\n(OA opcional en revista de pago)", "Diamond\n(OA sin coste para el autor)", "Bronze\n(OA temporal o informal)", "Cerrado\n(Sin OA)"], "range": ["#2ca02c", "#98df8a", "#1f77b4", "#aec7e8", "#ffbb78", "#d62728"]}, "type": "nominal"}, "text": {"field": "mediana", "format": ".0f", "type": "quantitative"}, "tooltip": [{"field": "Tipo de acceso", "type": "nominal"}, {"field": "mediana", "format": ",", "type": "quantitative"}], "x": {"field": "mediana", "title": "Mediana de citas por paper", "type": "quantitative"}, "y": {"field": "Tipo de acceso", "sort": {"field": "mediana", "order": "descending"}, "title": "", "type": "nominal"}}, "title": "Mediana de citas seg\u00fan tipo de acceso abierto"}], "data": {"name": "data-6f7d8b9df1e42ae91e348bc8f527330b"}, "height": 460, "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-6f7d8b9df1e42ae91e348bc8f527330b": [{"oa_status": "gold", "mediana": 79.0, "n": 10143, "Tipo de acceso": "Gold\n(Revista OA pura)"}, {"oa_status": "hybrid", "mediana": 56.0, "n": 1140, "Tipo de acceso": "Hybrid\n(OA opcional en revista de pago)"}, {"oa_status": "green", "mediana": 47.0, "n": 6025, "Tipo de acceso": "Green\n(Repositorio/preprint)"}, {"oa_status": "diamond", "mediana": 41.0, "n": 2641, "Tipo de acceso": "Diamond\n(OA sin coste para el autor)"}, {"oa_status": "closed", "mediana": 26.0, "n": 52900, "Tipo de acceso": "Cerrado\n(Sin OA)"}, {"oa_status": "bronze", "mediana": 9.0, "n": 4151, "Tipo de acceso": "Bronze\n(OA temporal o informal)"}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>La jerarquía es clara: la publicación <strong>Gold OA</strong> (revistas que solo publican en abierto) tiene la mediana de citas más alta (<strong>79 citas</strong>), seguida por Green (repositorios, 47), Hybrid (56) y Diamond (41). Sorprendentemente, los papers cerrados tienen una mediana de <strong>26 citas</strong>, inferior incluso a la mayoría de modalidades OA. El tipo Bronze —acceso informal o temporal, sin garantías de permanencia— es el de menor impacto, lo que sugiere que <em>cómo</em> se hace el OA importa tanto como <em>si</em> se hace.</p>
+<div id="cell-q7-cohort" class="cell" data-execution_count="14">
+<div id="q7-cohort" class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-b531a0e91db0414b8b1adcb7df81b37b.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-b531a0e91db0414b8b1adcb7df81b37b.vega-embed details,
+  #altair-viz-b531a0e91db0414b8b1adcb7df81b37b.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-b531a0e91db0414b8b1adcb7df81b37b"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-b531a0e91db0414b8b1adcb7df81b37b") {
+      outputDiv = document.getElementById("altair-viz-b531a0e91db0414b8b1adcb7df81b37b");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"labelFontSize": 13, "titleFontSize": 15}, "legend": {"labelFontSize": 13, "symbolSize": 100, "titleFontSize": 15}, "title": {"fontSize": 16}}, "layer": [{"mark": {"type": "bar"}, "encoding": {"color": {"field": "Acceso", "scale": {"domain": ["Acceso Abierto", "Acceso Cerrado"], "range": ["#2ca02c", "#d62728"]}, "title": "Tipo de acceso", "type": "nominal"}, "tooltip": [{"field": "Cohorte", "type": "ordinal"}, {"field": "Acceso", "type": "nominal"}, {"field": "Mediana de citas", "format": ",", "type": "quantitative"}], "x": {"field": "Cohorte", "sort": ["Antes de 2005", "2005\u20132012", "2013\u20132017", "2018\u20132025"], "title": "Per\u00edodo de publicaci\u00f3n", "type": "nominal"}, "xOffset": {"field": "Acceso", "type": "nominal"}, "y": {"field": "Mediana de citas", "title": "Mediana de citas por paper", "type": "quantitative"}}, "title": "\u00bfOA genera m\u00e1s citas? Comparaci\u00f3n por cohorte temporal"}, {"mark": {"type": "text", "color": "black", "dy": -10, "fontSize": 14}, "encoding": {"color": {"field": "Acceso", "scale": {"domain": ["Acceso Abierto", "Acceso Cerrado"], "range": ["#2ca02c", "#d62728"]}, "title": "Tipo de acceso", "type": "nominal"}, "text": {"field": "Mediana de citas", "format": ".0f", "type": "quantitative"}, "tooltip": [{"field": "Cohorte", "type": "ordinal"}, {"field": "Acceso", "type": "nominal"}, {"field": "Mediana de citas", "format": ",", "type": "quantitative"}], "x": {"field": "Cohorte", "sort": ["Antes de 2005", "2005\u20132012", "2013\u20132017", "2018\u20132025"], "title": "Per\u00edodo de publicaci\u00f3n", "type": "nominal"}, "xOffset": {"field": "Acceso", "type": "nominal"}, "y": {"field": "Mediana de citas", "title": "Mediana de citas por paper", "type": "quantitative"}}, "title": "\u00bfOA genera m\u00e1s citas? Comparaci\u00f3n por cohorte temporal"}], "data": {"name": "data-53f42a888226fa53d73184a9ff107339"}, "height": 450, "width": 700, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-53f42a888226fa53d73184a9ff107339": [{"Cohorte": "Antes de 2005", "Acceso": "Acceso Abierto", "Mediana de citas": 12.0}, {"Cohorte": "Antes de 2005", "Acceso": "Acceso Cerrado", "Mediana de citas": 14.0}, {"Cohorte": "2005\u20132012", "Acceso": "Acceso Abierto", "Mediana de citas": 78.0}, {"Cohorte": "2005\u20132012", "Acceso": "Acceso Cerrado", "Mediana de citas": 79.0}, {"Cohorte": "2013\u20132017", "Acceso": "Acceso Abierto", "Mediana de citas": 79.0}, {"Cohorte": "2013\u20132017", "Acceso": "Acceso Cerrado", "Mediana de citas": 70.0}, {"Cohorte": "2018\u20132025", "Acceso": "Acceso Abierto", "Mediana de citas": 103.0}, {"Cohorte": "2018\u20132025", "Acceso": "Acceso Cerrado", "Mediana de citas": 100.0}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>El resultado es revelador: una vez que se controla por la edad del paper, la ventaja del OA prácticamente <strong>desaparece</strong>. En todas las cohortes, los papers de acceso abierto y los cerrados muestran medianas de citas casi idénticas. Por ejemplo, en el período 2018–2022, los papers cerrados tienen 100 citas de mediana y los OA apenas 103. Esto sugiere que la diferencia observada en el gráfico anterior (Gold OA = 79 vs.&nbsp;Cerrado = 26) <strong>no refleja un efecto causal del OA</strong>, sino que está impulsada por factores confundidores: los papers Gold OA tienden a pertenecer a temas más modernos y de alta demanda que atraen citas independientemente del acceso. En otras palabras, los papers están en revistas OA <em>porque</em> son de alta calidad, no son de alta calidad <em>porque</em> están en OA.</p>
+<hr>
+</section>
+<section id="conclusiones" class="level2">
+<h2 class="anchored" data-anchor-id="conclusiones">Conclusiones</h2>
+<p>Los datos cuentan una historia coherente e interesante sobre el medio. La IA académica pasó de ser una disciplina de nicho a convertirse en uno de los campos científicos más prolíficos del mundo, con momentos de inflexión bien definidos (AlexNet en 2012, Transformers en 2017, ChatGPT en 2022). Los temas que más crecen hoy no son los clásicos, sino aquellos que abordan los límites y las implicaciones de los modelos modernos: explicabilidad, robustez y fairness.</p>
+<p>Geográficamente, China y EE. UU. dominan de forma abrumadora, con el resto del mundo compitiendo por un espacio cada vez más exigente. En términos de impacto, los papers con <strong>co-autoría internacional</strong> muestran consistentemente el doble o más de citas que los domésticos (una brecha crece con el número de países involucrados), lo que parece ser una palanca real para ampliar la repercusión. En cambio, la ventaja del <strong>Open Access</strong> en citas resulta ser en gran medida un espejismo estadístico: desaparece al controlar por el año de publicación, indicando que la causalidad es inversa: los trabajos de mayor calidad eligen el OA, no que el OA produce mayor calidad.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

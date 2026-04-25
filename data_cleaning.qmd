@@ -1,0 +1,158 @@
+---
+title: "Limpieza de Datos"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Dataset A - Conteos por tema y año
+
+### Carga del dataset
+
+Head:
+
+```{python}
+import pandas as pd
+
+df = pd.read_csv("data/ai_topic_year_counts.csv")
+df.head()
+```
+
+
+El dataset muestra información del año de publicación, el total de papers por año (que viene de la agregación para evitar calcularlo luego), el nombre del tema, y el conteo de papers por tema. Este dataset se utilizará para responder preguntas relacionadas con las tendencias de publicación por tema a lo largo del tiempo, los temas con mayor tasa de crecimiento, y los temas más populares en las publicaciones académicas de inteligencia artificial.
+
+### Exploración inicial del dataset
+
+#### Información general del dataset
+
+```{python}
+# Información general del dataset
+df.info()
+```
+
+#### Conteo de valores nulos
+
+```{python}
+# Verificar valores nulos
+df.isnull().sum()
+```
+
+#### Verificar tipos de datos
+
+```{python}
+# Verificar tipos de datos
+df.dtypes
+```
+
+Como se observa, no hay datos nulos y los tipos de datos son adecuados.
+
+### Transformaciones
+
+Como lo que interesa es más la información en texto, lo primero sería eliminar las columnas que tienen IDs, ya que en este caso no son necesarias. También eliminar el domain name porque no es relevante para el análisis que se va a realizar.
+
+```{python}
+# Eliminar columnas innecesarias
+df = df.drop(columns=['topic_id', 'subfield_id', 'field_id', 'domain_id', 'domain_name'])
+df.head()
+```
+
+Con esto ya es suficiente para poder hacer las visualizaciones, ya que el dataset está limpio y listo para ser utilizado. Se pueden realizar algunas transformaciones adicionales si se desea, como por ejemplo crear una columna de porcentaje de papers por tema respecto al total de papers por año, pero esto se puede hacer directamente en la visualización sin necesidad de modificar el dataset original.
+
+## Dataset B - Conteos por país y año
+
+### Carga del dataset
+
+Head:
+
+```{python}
+import pandas as pd
+df = pd.read_csv("data/ai_geo_year_counts.csv")
+df.head()
+```
+
+El dataset muestra información del año de publicación, el total de papers por año (que viene de la agregación para evitar calcularlo luego), el nombre del país, y el conteo de papers por país. Este dataset se utilizará para responder preguntas relacionadas con la distribución geográfica de las publicaciones académicas en el campo de la inteligencia artificial.
+
+### Exploración inicial del dataset
+
+#### Información general del dataset
+
+```{python}
+# Información general del dataset
+df.info()
+```
+
+#### Conteo de valores nulos
+
+```{python}
+# Verificar valores nulos
+df.isnull().sum()
+```
+
+#### Verificar tipos de datos
+
+```{python}
+# Verificar tipos de datos
+df.dtypes
+```
+
+Como se observa, no hay datos nulos y los tipos de datos son adecuados.
+
+### Transformaciones
+
+No se necesitan transformaciones, ya que toda la información relevante está presente.
+
+## Dataset C - Muestreo de papers individuales
+
+### Carga del dataset
+
+Head: 
+
+```{python}
+import pandas as pd
+df = pd.read_csv("data/ai_papers_sample.csv")
+df.head()
+```
+
+El dataset muestra información de papers individuales, incluyendo el año de publicación, el título del paper, el número de citas, si tiene co-autoría internacional, y si es de acceso abierto. Este dataset se utilizará para responder preguntas relacionadas con la correlación entre el número de publicaciones y su impacto, la relación entre la internacionalización de los autores y el impacto del artículo, y si publicar en Open Access genera una ventaja significativa en el número de citas.
+
+### Exploración inicial del dataset
+
+#### Información general del dataset
+
+```{python}
+# Información general del dataset
+df.info()
+```
+
+#### Conteo de valores nulos
+
+```{python}
+# Verificar valores nulos
+df.isnull().sum()
+```
+
+#### Verificar tipos de datos
+
+```{python}
+# Verificar tipos de datos
+df.dtypes
+```
+
+Como se observa, no hay datos nulos y los tipos de datos son adecuados.
+
+### Transformaciones
+
+Como lo que interesa es más la información en texto, hay que eliminar las columnas que tienen IDs, ya que en este caso no son necesarias.
+
+```{python}
+# Eliminar columnas innecesarias
+df = df.drop(columns=['work_id', 'primary_topic_id', 'subfield_id'])
+df.head()
+```
+
+Con esto ya es suficiente para poder hacer las visualizaciones, ya que el dataset está limpio y listo para ser utilizado. Se pueden realizar algunas transformaciones adicionales si se desea, como por ejemplo crear una columna de impacto (número de citas dividido por el número de años desde la publicación), pero esto se puede hacer directamente en la visualización sin necesidad de modificar el dataset original.
+
+## Siguiente
+
+- [Visualización](visualizations.qmd)

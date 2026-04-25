@@ -1,0 +1,647 @@
+---
+title: "Análisis Visual de Tendencias en Publicaciones de IA"
+subtitle: "¿Qué nos cuentan los datos sobre la evolución académica de la inteligencia artificial?"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{python}
+#| label: setup
+
+import pandas as pd
+import numpy as np
+import altair as alt
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import pycountry
+import textwrap
+import warnings
+warnings.filterwarnings("ignore")
+alt.data_transformers.disable_max_rows()
+
+# ── Carga de datos ────────────────────────────────────────────────────────────
+df_topics = pd.read_csv("data/ai_topic_year_counts_clean.csv")
+df_geo    = pd.read_csv("data/ai_geo_year_counts.csv")
+df_sample = pd.read_csv("data/ai_papers_sample.csv")
+
+# ── Ajustes comunes ───────────────────────────────────────────────────────────
+TEMPLATE = "plotly_white"
+COLOR_SEQ = px.colors.qualitative.Set2
+
+# Helper: convertir ISO-2 → ISO-3
+def iso2_to_iso3(code):
+    try:
+        return pycountry.countries.get(alpha_2=code).alpha_3
+    except Exception:
+        return None
+```
+
+---
+
+## Pregunta 1 - ¿Cuáles son las tendencias de publicación a lo largo del tiempo?
+
+La IA no creció de manera uniforme. Hubo décadas de avance pausado intercaladas con explosiones de actividad impulsadas por descubrimientos tecnológicos clave. El primer gráfico muestra la cantidad total de publicaciones por año; el segundo, la tasa de crecimiento anual, que revela cuándo fue realmente más acelerado ese crecimiento.
+
+```{python}
+#| label: q1-volumen
+
+yearly = (
+    df_topics
+    .drop_duplicates("year")[["year", "total_papers"]]
+    .sort_values("year")
+    .query("year <= 2026")        # 2026 es parcial
+)
+
+max_papers = yearly["total_papers"].max()
+hitos = pd.DataFrame({
+    "year": [1956, 2012, 2017, 2022],
+    "label": [
+        "Conferencia de Dartmouth",
+        "AlexNet",
+        "Transformers",
+        "ChatGPT"
+    ],
+    "y": [
+        max_papers * 0.98,
+        max_papers * 0.98,
+        max_papers * 0.88,
+        max_papers * 0.78
+    ]
+})
+
+base = alt.Chart(yearly).encode(
+    x=alt.X(
+        "year:O", title="Año",
+        axis=alt.Axis(values=list(range(1950, 2027, 5)), labelAngle=0)
+    )
+)
+
+area = base.mark_area(color="#4C72B0", opacity=0.25, interpolate="monotone").encode(
+    y=alt.Y("total_papers:Q", title="Número de publicaciones")
+)
+
+line = base.mark_line(color="#4C72B0", size=3, interpolate="monotone").encode(
+    y="total_papers:Q"
+)
+
+points = base.mark_circle(color="#4C72B0", size=50).encode(
+    y="total_papers:Q",
+    tooltip=["year", alt.Tooltip("total_papers:Q", format=",")]
+)
+
+markers = alt.Chart(hitos).mark_rule(color="#DD8452", strokeDash=[4,4], opacity=0.8).encode(
+    x="year:O"
+)
+
+# Add legend for milestones on separate vertical positions to avoid overlap
+legend = alt.Chart(hitos).mark_text(
+    align="left",
+    dx=5,
+    color="#DD8452",
+    fontSize=12
+).encode(
+    x="year:O",
+    y=alt.Y("y:Q", axis=None),
+    text="label:N"
+)
+
+chart = (area + line + points + markers + legend).properties(
+    title="Publicaciones académicas en IA por año (1950 – 2026)",
+    height=430,
+    width=700
+).configure_title(fontSize=16).configure_axis(labelFontSize=12, titleFontSize=14)
+
+chart.show()
+```
+
+El gráfico muestra que el campo de la IA creció de forma casi imperceptible durante sus primeras cuatro décadas. El gran punto de inflexión llegó en 2012, cuando AlexNet demostró el poder del deep learning. Desde entonces el crecimiento fue sostenido, con una aceleración notable tras la publicación del artículo que vio nacer al Transformer en 2017 y un salto histórico tras el lanzamiento de ChatGPT en 2022. En 2025 se registraron más de **270.000 publicaciones**, más de 190 veces las de 1950. Un detalle importante es que hay una subida repentina en 2002. Si bien esto se podría interpretar como un crecimiento orgánico por un gran descubrimiento (por ejemplo las investigaciones sobre SVM, lo único que podría ser la causa, pero no fue tan relevante realmente) la realidad es que, por lo que he podido averiguar, muy probablemente se debe a un cambio en la cobertura de OpenAlex: a partir de ese año se incorporaron muchas revistas y conferencias que antes no estaban indexadas, lo que infló artificialmente el número de publicaciones. Por eso, aunque el gráfico muestra esa subida, no se le puede atribuir a un aumento real en la producción científica.
+
+```{python}
+#| label: q1-crecimiento-yoy
+
+yearly["yoy_pct"] = yearly["total_papers"].pct_change() * 100
+recent = yearly.query("year > 2005 and year < 2026").dropna()
+
+chart = alt.Chart(recent).mark_bar().encode(
+    x=alt.X("year:O", title="Año"),
+    y=alt.Y("yoy_pct:Q", title="Variación respecto al año anterior (%)"),
+    color=alt.condition(
+        alt.datum.yoy_pct >= 0,
+        alt.value("#4C72B0"),
+        alt.value("#C44E52")
+    ),
+    tooltip=["year", alt.Tooltip("yoy_pct:Q", format=".1f", title="Cambio %")]
+).properties(
+    title="Crecimiento anual de publicaciones en IA (2006 – 2025)",
+    height=430,
+    width=700
+)
+
+text = chart.mark_text(dy=-10, color="black").encode(
+    text=alt.Text("yoy_pct:Q", format=".1f")
+)
+
+(chart + text).configure_title(fontSize=16).configure_axis(labelFontSize=12, titleFontSize=14).show()
+```
+
+Como se puede ver, la tasa de crecimiento anual aporta una perspectiva distinta: muestra *cuándo* fue más acelerada la expansión, no solo cuánto se publicó. Se pueden notar fácilmente los grandes puntos de interés de los tiempos modernos: en 2018, tras la publicación del Transformer, la tasa de crecimiento se disparó, estabilizándose poco después. En 2023, luego de la salida de ChatGPT, se alcanzó un pico aún mayor, mostrando el nacimiento de la IA Generativa como rama de investigación, una tendencia algo controlada en 2024, pero que se disparó como nunca en 2025. Si tomamos en cuenta las tendencias de los otros períodos de explosión, cabría esperar estabilización en el área en los próximos años.
+
+---
+
+## Pregunta 2 - ¿Qué temas crecieron más rápido?
+
+Para medir la "tasa de crecimiento tras el surgimiento" de cada tema, utilizamos el período **2017–2025**: los años inmediatamente posteriores a la masificación de los Transformers, y la masificación de la IA Generativa, que marcó el verdadero despegue de muchas líneas de investigación modernas en IA. Solo se incluyeron temas con al menos 50 publicaciones en 2017, para asegurar que el crecimiento sea estadísticamente significativo y no un artefacto de partidas desde cero.
+
+```{python}
+#| label: q2-barras
+
+pivot = df_topics.pivot_table(
+    index="topic_name", columns="year", values="n_papers", fill_value=0
+)
+
+# Sólo temas con base sólida en 2017
+mask = pivot[2017] >= 50
+growth = pivot[mask][[2017, 2025]].copy()
+growth["growth_pct"] = (growth[2025] - growth[2017]) / growth[2017] * 100
+growth = growth.sort_values("growth_pct", ascending=False).head(15).reset_index()
+growth.columns = ["Tema", "Papers 2017", "Papers 2025", "Crecimiento (%)"]
+
+chart = alt.Chart(growth).mark_bar().encode(
+    y=alt.Y("Tema:N", sort=alt.EncodingSortField(field="Crecimiento (%)", order="descending"), title=""),
+    x=alt.X("Crecimiento (%):Q", title="Crecimiento porcentual (%)"),
+    color=alt.Color("Crecimiento (%):Q", scale=alt.Scale(scheme="blues"), legend=None),
+    tooltip=["Tema", "Papers 2017", "Papers 2025", alt.Tooltip("Crecimiento (%):Q", format=".1f")]
+).properties(
+    title="Top 15 temas con mayor crecimiento 2017 - 2025",
+    height=520,
+    width=700
+)
+
+text = chart.mark_text(align="left", dx=5, color="black").encode(
+    text=alt.Text("Crecimiento (%):Q", format=".0f")
+)
+
+(chart + text).configure_title(fontSize=16).configure_axis(labelFontSize=12, titleFontSize=14).show()
+```
+
+Los temas con mayor explosión de actividad son precisamente los que definen la IA contemporánea. La **IA Explicable (XAI)** e **IA en interacciones de servicios** lideran el ranking con crecimientos superiores al 2000 %, lo que refleja la necesidad de la comunidad científica de hacer los modelos más interpretables, seguros y adecuados para interactuar con seres humanos en sistemas. Les siguen la **Robustez Adversarial** y las **Redes Neuronales de Grafos**, que definen la base de los sistemas generativos modernos. En conjunto, este gráfico es un mapa de las prioridades investigadoras los últimos años.
+
+```{python}
+#| label: q2-trayectorias
+
+top6 = growth.head(6)["Tema"].tolist()
+
+df_traj = df_topics[
+    df_topics["topic_name"].isin(top6) &
+    (df_topics["year"] >= 2010) &
+    (df_topics["year"] <= 2025)
+].copy()
+
+chart = alt.Chart(df_traj).mark_line(point=True).encode(
+    x=alt.X("year:O", title="Año"),
+    y=alt.Y("n_papers:Q", title="Publicaciones"),
+    color=alt.Color("topic_name:N", title="Tema"),
+    tooltip=["topic_name", "year", "n_papers"]
+).properties(
+    title="Trayectoria de los 6 temas de más rápido crecimiento (2010 – 2025)",
+    height=450,
+    width=500
+)
+
+chart = chart.configure_legend(
+    titleFontSize=14,
+    labelFontSize=12
+)
+
+chart.configure_title(fontSize=16).configure_axis(labelFontSize=12, titleFontSize=14).show()
+```
+
+Las trayectorias confirman que estos temas prácticamente no existían como línea de investigación antes de 2016. La curva de **AI in Service Interactions** es la más pronunciada, con un crecimiento exponencial desde 2017. La **IA Explicable** también muestra una subida meteórica, especialmente a partir de 2018, reflejando la creciente preocupación por la interpretabilidad de los modelos. Las otras cuatro áreas siguen una tendencia similar, con un despegue claro a partir de 2017 y un crecimiento sostenido hasta 2025. Estas trayectorias son un testimonio visual del impacto transformador que los avances tecnológicos recientes han tenido en la dirección de la investigación en IA.
+
+---
+
+## Pregunta 3 - ¿Cuáles son los temas más populares en la academia de IA?
+
+```{python}
+#| label: q3-barras
+
+topic_total = (
+    df_topics
+    .groupby("topic_name")["n_papers"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(15)
+    .reset_index()
+)
+topic_total.columns = ["Tema", "Total de publicaciones"]
+
+chart = alt.Chart(topic_total).mark_bar().encode(
+    y=alt.Y("Tema:N", sort=alt.EncodingSortField(field="Total de publicaciones", order="descending"), title=""),
+    x=alt.X("Total de publicaciones:Q", title="Total de publicaciones"),
+    color=alt.Color("Total de publicaciones:Q", scale=alt.Scale(scheme="tealblues"), legend=None),
+    tooltip=["Tema", alt.Tooltip("Total de publicaciones:Q", format=",")]
+).properties(
+    title="Top 15 temas más prolíficos en publicaciones de IA (1950 – 2025)",
+    height=530,
+    width=700
+)
+
+text = chart.mark_text(align="left", dx=5, color="black").encode(
+    text=alt.Text("Total de publicaciones:Q", format=",")
+)
+
+(chart + text).configure_title(fontSize=16).configure_axis(labelFontSize=12, titleFontSize=14).show()
+```
+
+El podio lo ocupa **Advanced Computational Techniques and Applications** (más de 166.000 papers), seguido de cerca por **Natural Language Processing** y **Neural Networks and Applications**. Resulta llamativo que "Geochemistry and Geologic Mapping" aparezca en el top 5: esto se debe a que OpenAlex clasifica a la IA aplicada a geociencias bajo la categoría de IA. El dominio claro de NLP y redes neuronales refleja que el procesamiento de lenguaje y los modelos profundos son los pilares técnicos de la IA moderna, alimentado aún más por las investigaciones relacionadas a LLMs, que nacieron a partir de una arquitectura para NLP. Sin embargo, el hecho de que el tema más popular sea "Técnicas computacionales avanzadas y aplicaciones" sugiere que la comunidad académica también valora mucho las contribuciones metodológicas generales, que pueden aplicarse a múltiples áreas dentro de la IA.
+
+```{python}
+#| label: q3-treemap
+
+topic_hier = (
+    df_topics
+    .groupby(["subfield_name", "topic_name"])["n_papers"]
+    .sum()
+    .reset_index()
+)
+topic_hier.columns = ["Subcampo", "Tema", "Publicaciones"]
+topic_hier["root"] = "Inteligencia Artificial"
+
+# Wrap long labels so the treemap text can use more space inside each box
+wrap_width = 12
+import textwrap
+topic_hier["Subcampo_wrapped"] = topic_hier["Subcampo"].apply(lambda x: textwrap.fill(x, wrap_width).replace('\n', '<br>'))
+topic_hier["Tema_wrapped"] = topic_hier["Tema"].apply(lambda x: textwrap.fill(x, wrap_width).replace('\n', '<br>'))
+
+fig = px.treemap(
+    topic_hier,
+    path=["root", "Subcampo_wrapped", "Tema_wrapped"],
+    values="Publicaciones",
+    color="Publicaciones",
+    color_continuous_scale="Blues",
+    title="Mapa jerárquico de temas: distribución de publicaciones por subcampo",
+    hover_data={"Publicaciones": ":,"}
+)
+fig.update_traces(
+    textinfo="label+percent parent",
+    insidetextfont=dict(size=24),
+    textfont=dict(size=24),
+    hovertemplate="<b>%{label}</b><br>%{value:,} publicaciones<br>%{percentParent:.1%} del subcampo<extra></extra>"
+)
+fig.update_layout(
+    template=TEMPLATE,
+    height=800,
+    title=dict(font=dict(size=20)),
+    font=dict(size=14),
+    coloraxis_showscale=False
+)
+fig.show()
+```
+
+El mapa jerárquico revela que el campo se divide en dos grandes subcampos: **Inteligencia Artificial** (en sentido estricto) y **Computer Vision and Pattern Recognition**. El subcampo de IA es claramente dominante en volumen, con temas de NLP, razonamiento y aprendizaje automático general. El subcampo de Visión engloba técnicas más aplicadas como el denoising de imágenes, la detección de objetos y la síntesis generativa. Dentro de cada subcampo, los temas más grandes reflejan áreas de investigación fundamentales: en IA, el aprendizaje automático y el razonamiento; en Visión, la síntesis generativa y la detección de objetos. El mapa también muestra que hay una gran cantidad de temas con volúmenes menores, lo que sugiere una diversidad de líneas de investigación dentro del campo.
+
+---
+
+## Pregunta 4 - ¿Cómo se distribuyen geográficamente las publicaciones?
+
+La producción científica nunca ha sido homogénea. Algunos países lideran la investigación en IA por su inversión en universidades, financiamiento gubernamental o ecosistema tecnológico. Este análisis usa datos geográficos acumulados.
+
+```{python}
+#| label: q4-mapa
+
+df_geo["iso3"] = df_geo["country_code"].apply(iso2_to_iso3)
+country_total = (
+    df_geo.dropna(subset=["iso3"])
+    .groupby(["iso3", "country_name"])["n_papers"]
+    .sum()
+    .reset_index()
+)
+country_total.columns = ["ISO3", "País", "Total publicaciones"]
+
+fig = px.choropleth(
+    country_total,
+    locations="ISO3",
+    color="Total publicaciones",
+    hover_name="País",
+    hover_data={"Total publicaciones": ":,", "ISO3": False},
+    color_continuous_scale="YlOrRd",
+    projection="natural earth",
+    title="Distribución global de publicaciones en IA (1950 – 2026)"
+)
+fig.update_layout(
+    template=TEMPLATE,
+    height=480,
+    title=dict(font=dict(size=16)),
+    font=dict(size=12),
+    coloraxis_colorbar=dict(title="Publicaciones", tickformat=",")
+)
+fig.show()
+```
+
+El mapa muestra una concentración brutal de la producción científica en IA en tres grandes bloques: **Estados Unidos**, **China** e **India**, con Europa Occidental un poco por detrás (encabezada por Reino Unido y Alemania). La intensidad de China es especialmente notable: en las últimas dos décadas pasó de ser un actor marginal a competir directamente con EE. UU. por el primer puesto. La mayor parte del hemisferio sur y África permanecen prácticamente ausentes del mapa, lo que señala una profunda brecha global en acceso al conocimiento y recursos.
+
+```{python}
+#| label: q4-barras-paises
+
+# Top 15 países en el año más reciente completo (2024)
+top_countries_2024 = (
+    df_geo.query("year == 2024")
+    .nlargest(15, "n_papers")[["country_name", "n_papers"]]
+    .sort_values("n_papers")
+)
+top_countries_2024.columns = ["País", "Publicaciones en 2024"]
+
+fig = px.bar(
+    top_countries_2024,
+    x="Publicaciones en 2024", y="País",
+    orientation="h",
+    color="Publicaciones en 2024",
+    color_continuous_scale="Reds",
+    text=top_countries_2024["Publicaciones en 2024"].apply(lambda x: f"{x:,}"),
+    labels={"País": ""},
+    title="Top 15 países por publicaciones en IA (2024)"
+)
+fig.update_traces(textposition="outside")
+fig.update_layout(
+    template=TEMPLATE,
+    coloraxis_showscale=False,
+    height=500,
+    xaxis_title="Número de publicaciones",
+    title=dict(font=dict(size=16)),
+    font=dict(size=12),
+    xaxis=dict(tickfont=dict(size=12)),
+    yaxis=dict(tickfont=dict(size=12)),
+    margin=dict(l=160)
+)
+fig.show()
+```
+
+El ranking de 2024 consolida lo que el mapa ya sugería: **China** lidera por un margen enorme, duplicando las publicaciones de EE. UU. La India aparece en un sólido tercer lugar, reflejando el fuerte impulso de su ecosistema tecnológico y universitario. El grupo europeo (Reino Unido, Alemania, Francia, Italia, España) es competitivo individualmente pero fragmentado. Países como Canadá, Japón y Corea del Sur también destacan, mostrando que la innovación en IA no es exclusiva de los gigantes. Sin embargo, la ausencia de países de África y América Latina en el top 15 subraya la necesidad de políticas globales para democratizar el acceso a la investigación y fomentar la colaboración internacional.
+
+---
+
+## Pregunta 5 - ¿Hay correlación entre el volumen de publicaciones y su impacto?
+
+Esta pregunta tiene un matiz importante: los papers acumulan citas con el tiempo, por lo que los artículos recientes parecen tener menos impacto aunque sean igualmente influyentes. Para una comparación justa, el análisis se limita a los años **1980–2022**, donde los papers ya tienen suficiente tiempo de exposición para haber acumulado citas representativas.
+
+```{python}
+#| label: q5-dual-axis
+
+yearly_vol = (
+    df_topics.drop_duplicates("year")[["year", "total_papers"]]
+    .query("1980 <= year <= 2022")
+    .sort_values("year")
+)
+yearly_cites = (
+    df_sample
+    .query("1980 <= year <= 2022")
+    .groupby("year")["cited_by_count"]
+    .median()
+    .reset_index()
+)
+yearly_cites.columns = ["year", "median_cites"]
+q5 = yearly_vol.merge(yearly_cites, on="year")
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+fig.add_trace(
+    go.Bar(
+        x=q5["year"], y=q5["total_papers"],
+        name="Total publicaciones",
+        marker_color="rgba(76, 114, 176, 0.55)",
+        marker_line_width=0
+    ),
+    secondary_y=False
+)
+fig.add_trace(
+    go.Scatter(
+        x=q5["year"], y=q5["median_cites"],
+        name="Mediana de citas por paper",
+        mode="lines+markers",
+        line=dict(color="#DD8452", width=2.5),
+        marker=dict(size=6)
+    ),
+    secondary_y=True
+)
+
+fig.update_layout(
+    title=dict(text="Volumen de publicaciones vs. impacto por paper (1980–2022)", font=dict(size=16), x=0.5, xanchor='center', y=0.98, yanchor='top'),
+    template=TEMPLATE,
+    height=520,
+    font=dict(size=12),
+    legend=dict(orientation="h", yanchor="bottom", y=1.12, xanchor="center", x=0.5),
+    margin=dict(t=100, b=60),
+    hovermode="x unified",
+    xaxis=dict(title_font=dict(size=14), tickfont=dict(size=12)),
+    yaxis=dict(title_font=dict(size=14), tickfont=dict(size=12)),
+    yaxis2=dict(title_font=dict(size=14), tickfont=dict(size=12))
+)
+fig.update_yaxes(title_text="Total de publicaciones", secondary_y=False)
+fig.update_yaxes(title_text="Mediana de citas por paper", secondary_y=True)
+fig.update_xaxes(title_text="Año")
+fig.show()
+```
+
+El gráfico revela una relación aparentemente paradójica: a medida que el **volumen de publicaciones aumenta** (barras azules, que escalan dramáticamente entrando al nuevo siglo), la **mediana de citas por paper** (línea naranja) también sube hasta aproximadamente 2005 y luego cae en picado por un tiempo, para luego estabilizarse en un nivel algo inferior al de los 90s. Esto se puede interpretar de varias formas: el aumento masivo de papers podría estar diluyendo la atención, haciendo que cada artículo reciba menos citas en promedio. Sin embargo, también es posible que el crecimiento explosivo haya traído consigo una mayor diversidad de temas y calidad variable, lo que podría explicar la caída en la mediana de citas. Además, muchas de estas subidas coinciden con los booms de interés en el área, lo que puede significar que cuando el área se estabiliza, la atención se distribuye de manera más uniforme, y hay menos citas. En cualquier caso, el gráfico sugiere que el impacto por paper no crece al mismo ritmo que el volumen, lo que plantea preguntas sobre la sostenibilidad del modelo actual de publicación científica.
+
+---
+
+## Pregunta 6 - ¿La colaboración internacional se asocia con mayor impacto?
+
+Un paper con autores de varios países requiere más coordinación, pero también combina perspectivas y redes de difusión más amplias. ¿Se traduce eso en más citas?
+
+```{python}
+#| label: q6-violin
+
+df_q6 = df_sample[df_sample["cited_by_count"] > 0].copy()
+df_q6["Colaboración"] = df_q6["is_international"].map(
+    {True: "Internacional", False: "Doméstica"}
+)
+
+med_intl = df_q6[df_q6["is_international"]]["cited_by_count"].median()
+med_dom  = df_q6[~df_q6["is_international"]]["cited_by_count"].median()
+
+median_df = (
+    df_q6.groupby("Colaboración", observed=True)["cited_by_count"]
+    .median()
+    .reset_index()
+    .rename(columns={"cited_by_count": "Mediana de citas"})
+)
+
+chart = alt.Chart(median_df).mark_bar().encode(
+    x=alt.X("Mediana de citas:Q", title="Mediana de citas"),
+    y=alt.Y("Colaboración:N", sort=alt.EncodingSortField(field="Mediana de citas", order="descending"), title=""),
+    color=alt.Color("Colaboración:N", scale=alt.Scale(domain=["Internacional", "Doméstica"], range=["#4C72B0", "#DD8452"]), legend=None),
+    tooltip=["Colaboración", alt.Tooltip("Mediana de citas:Q", format=",")]
+).properties(
+    title=f"Mediana de citas por tipo de colaboración: internacional vs. doméstica",
+    height=400,
+    width=600
+)
+
+chart.configure_title(fontSize=16).configure_axis(labelFontSize=12, titleFontSize=14).show()
+```
+
+La diferencia es llamativa. Los papers con co-autoría internacional tienen una **mediana de 79 citas**, frente a las **45 citas** de los papers domésticos. Básicamente **1,75 veces más**. Esto sugiere que la colaboración entre países no solo amplía la red de difusión del trabajo, sino que probablemente también eleva la calidad percibida y la relevancia global del tema.
+
+```{python}
+#| label: q6-paises-buckets
+
+# Bucketing de n_countries
+df_q6b = df_sample[df_sample["cited_by_count"] > 0].copy()
+bins_c = [0, 1, 2, 3, 4, 100]
+labels_c = ["1 país", "2 países", "3 países", "4 países", "5+ países"]
+df_q6b["N° de países"] = pd.cut(df_q6b["n_countries"], bins=bins_c, labels=labels_c, right=True)
+
+stats = (
+    df_q6b.groupby("N° de países", observed=True)["cited_by_count"]
+    .agg(mediana="median", p75=lambda x: x.quantile(0.75), conteo="count")
+    .reset_index()
+)
+
+median_line = alt.Chart(stats).mark_line(point=True, color="#DD8452").encode(
+    x=alt.X("N° de países:N", title="Número de países en el paper"),
+    y=alt.Y("p75:Q", title="Citas"),
+    tooltip=["N° de países", alt.Tooltip("p75:Q", format=",", title="Percentil 75")]
+)
+
+bar = alt.Chart(stats).mark_bar(color="#4C72B0").encode(
+    x=alt.X("N° de países:N", title="Número de países en el paper"),
+    y=alt.Y("mediana:Q", title="Citas"),
+    tooltip=["N° de países", alt.Tooltip("mediana:Q", format=",", title="Mediana de citas")]
+)
+
+text = bar.mark_text(dy=-10, color="black").encode(
+    text=alt.Text("mediana:Q", format=".0f")
+)
+
+(bar + text + median_line).properties(
+    title="Impacto por número de países colaboradores",
+    height=400,
+    width=600
+).configure_title(fontSize=16).configure_axis(labelFontSize=12, titleFontSize=14).show()
+```
+
+La relación es casi perfectamente monotónica: a mayor número de países involucrados en un paper, mayor es su impacto medido en citas. Un paper con autores de **5 o más países** tiene una mediana de citas significativamente superior al de un solo país. El percentil 75 (línea naranja) también crece, indicando que no son solo algunos outliers los que inflan la cifra: toda la distribución se desplaza hacia arriba. Esto refuerza el argumento a favor de fomentar redes de colaboración internacional en investigación.
+
+---
+
+## Pregunta 7 - ¿Publicar en Open Access genera ventaja en citas?
+
+El acceso abierto (OA) permite que cualquier persona, en cualquier parte del mundo, lea un paper sin pagar. Intuitivamente, más lectores debería traducirse en más citas. Pero el tipo de OA importa: no es lo mismo una revista Gold OA (pago de procesamiento por parte del autor) que un preprint o un repositorio. OpenAlex clasifica el OA en varias categorías, que son:
+
+1. **Gold**: Revistas que solo publican en abierto, con un modelo de negocio basado en APC (Article Processing Charges).
+2. **Green**: Papers depositados en repositorios o preprints, que pueden ser versiones post-print o pre-print.
+3. **Hybrid**: Revistas de pago que ofrecen la opción de publicar en abierto mediante el pago de una tarifa.
+4. **Diamond**: Revistas que publican en abierto sin cobrar a los autores (sin APC).
+5. **Bronze**: Papers que están disponibles en abierto pero sin una licencia clara, a menudo debido a acuerdos temporales o políticas editoriales.
+6. **Closed**: Papers sin acceso abierto, solo disponibles a través de suscripción o pago.
+
+Con esto, el siguiente gráfico compara la mediana de citas por tipo de OA.
+
+```{python}
+#| label: q7-por-tipo
+
+# Traducir tipos de OA a etiquetas comprensibles
+oa_labels = {
+    "gold":    "Gold\n(Revista OA pura)",
+    "green":   "Green\n(Repositorio/preprint)",
+    "hybrid":  "Hybrid\n(OA opcional en revista de pago)",
+    "diamond": "Diamond\n(OA sin coste para el autor)",
+    "bronze":  "Bronze\n(OA temporal o informal)",
+    "closed":  "Cerrado\n(Sin OA)"
+}
+
+q7_type = (
+    df_sample
+    .groupby("oa_status")["cited_by_count"]
+    .agg(mediana="median", n="count")
+    .reset_index()
+)
+q7_type["Tipo de acceso"] = q7_type["oa_status"].map(oa_labels)
+q7_type = q7_type.sort_values("mediana", ascending=False)
+
+color_map = {
+    "Gold\n(Revista OA pura)":             "#2ca02c",
+    "Green\n(Repositorio/preprint)":        "#98df8a",
+    "Hybrid\n(OA opcional en revista de pago)": "#1f77b4",
+    "Diamond\n(OA sin coste para el autor)": "#aec7e8",
+    "Bronze\n(OA temporal o informal)":     "#ffbb78",
+    "Cerrado\n(Sin OA)":                    "#d62728"
+}
+
+chart = alt.Chart(q7_type).mark_bar().encode(
+    y=alt.Y("Tipo de acceso:N", sort=alt.EncodingSortField(field="mediana", order="descending"), title=""),
+    x=alt.X("mediana:Q", title="Mediana de citas por paper"),
+    color=alt.Color("Tipo de acceso:N", scale=alt.Scale(domain=list(color_map.keys()), range=list(color_map.values())), legend=None),
+    tooltip=["Tipo de acceso", alt.Tooltip("mediana:Q", format=",")]
+).properties(
+    title="Mediana de citas según tipo de acceso abierto",
+    height=460,
+    width=600
+)
+
+text = chart.mark_text(align="left", dx=5, color="black", fontSize=14).encode(
+    text=alt.Text("mediana:Q", format=".0f")
+)
+
+(chart + text).configure_title(fontSize=16).configure_axis(labelFontSize=13, titleFontSize=15).show()
+```
+
+La jerarquía es clara: la publicación **Gold OA** (revistas que solo publican en abierto) tiene la mediana de citas más alta (**79 citas**), seguida por Green (repositorios, 47), Hybrid (56) y Diamond (41). Sorprendentemente, los papers cerrados tienen una mediana de **26 citas**, inferior incluso a la mayoría de modalidades OA. El tipo Bronze —acceso informal o temporal, sin garantías de permanencia— es el de menor impacto, lo que sugiere que *cómo* se hace el OA importa tanto como *si* se hace.
+
+```{python}
+#| label: q7-cohort
+
+# Comparación OA vs. Cerrado controlando por edad del paper (cohorte temporal)
+bins_y = [0, 2004, 2012, 2017, 2025]
+labels_y = ["Antes de 2005", "2005–2012", "2013–2017", "2018–2025"]
+
+df_q7 = df_sample.query("year <= 2022").copy()
+df_q7["Cohorte"] = pd.cut(df_q7["year"], bins=bins_y, labels=labels_y)
+df_q7["Acceso"] = df_q7["is_oa"].map({True: "Acceso Abierto", False: "Acceso Cerrado"})
+
+cohort_stats = (
+    df_q7.groupby(["Cohorte", "Acceso"], observed=True)["cited_by_count"]
+    .median()
+    .reset_index()
+)
+cohort_stats.columns = ["Cohorte", "Acceso", "Mediana de citas"]
+
+chart = alt.Chart(cohort_stats).mark_bar().encode(
+    x=alt.X("Cohorte:N", sort=labels_y, title="Período de publicación"),
+    xOffset=alt.XOffset("Acceso:N"),
+    y=alt.Y("Mediana de citas:Q", title="Mediana de citas por paper"),
+    color=alt.Color("Acceso:N", scale=alt.Scale(domain=["Acceso Abierto", "Acceso Cerrado"], range=["#2ca02c", "#d62728"]), title="Tipo de acceso"),
+    tooltip=["Cohorte", "Acceso", alt.Tooltip("Mediana de citas:Q", format=",")]
+).properties(
+    title="¿OA genera más citas? Comparación por cohorte temporal",
+    height=450,
+    width=700
+)
+
+text = chart.mark_text(dy=-10, color="black", fontSize=14).encode(
+    text=alt.Text("Mediana de citas:Q", format=".0f")
+)
+
+(chart + text).configure_title(fontSize=16).configure_axis(
+    labelFontSize=13, titleFontSize=15
+).configure_legend(
+    titleFontSize=15, 
+    labelFontSize=13,
+    symbolSize=100
+).show()
+```
+
+El resultado es revelador: una vez que se controla por la edad del paper, la ventaja del OA prácticamente **desaparece**. En todas las cohortes, los papers de acceso abierto y los cerrados muestran medianas de citas casi idénticas. Por ejemplo, en el período 2018–2022, los papers cerrados tienen 100 citas de mediana y los OA apenas 103. Esto sugiere que la diferencia observada en el gráfico anterior (Gold OA = 79 vs. Cerrado = 26) **no refleja un efecto causal del OA**, sino que está impulsada por factores confundidores: los papers Gold OA tienden a pertenecer a temas más modernos y de alta demanda que atraen citas independientemente del acceso. En otras palabras, los papers están en revistas OA *porque* son de alta calidad, no son de alta calidad *porque* están en OA.
+
+---
+
+## Conclusiones
+
+Los datos cuentan una historia coherente e interesante sobre el medio. La IA académica pasó de ser una disciplina de nicho a convertirse en uno de los campos científicos más prolíficos del mundo, con momentos de inflexión bien definidos (AlexNet en 2012, Transformers en 2017, ChatGPT en 2022). Los temas que más crecen hoy no son los clásicos, sino aquellos que abordan los límites y las implicaciones de los modelos modernos: explicabilidad, robustez y fairness.
+
+Geográficamente, China y EE. UU. dominan de forma abrumadora, con el resto del mundo compitiendo por un espacio cada vez más exigente. En términos de impacto, los papers con **co-autoría internacional** muestran consistentemente el doble o más de citas que los domésticos (una brecha crece con el número de países involucrados), lo que parece ser una palanca real para ampliar la repercusión. En cambio, la ventaja del **Open Access** en citas resulta ser en gran medida un espejismo estadístico: desaparece al controlar por el año de publicación, indicando que la causalidad es inversa: los trabajos de mayor calidad eligen el OA, no que el OA produce mayor calidad.

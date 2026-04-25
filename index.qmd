@@ -1,0 +1,64 @@
+---
+title: "Análisis de las Tendencias de Publicaciones Académicas en el campo de la Inteligencia Artificial"
+subtitle: "Proyecto de Visualización de Datos"
+author: "Stadyn Román Niemes"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Contexto del Problema y Motivación
+
+El campo de la inteligencia artificial ha tenido varios períodos cambiantes en cuanto al interés académico, centrado sobre todo en eventos como la explosión de las redes neuronales, y más recientemente, el boom de la IA Generativa. Este aumento ha generado una gran cantidad de datos que pueden ser analizados para identificar tendencias, áreas de investigación emergentes, focos de interés en ciertos temas (y su finalización), etc. El objetivo de este proyecto es analizar estas tendencias y datos utilizando técnicas de visualización de datos.
+
+## Preguntas que el proyecto busca responder
+1. ¿Cuáles son las tendencias de publicación en el campo de la inteligencia artificial a lo largo del tiempo?
+2. ¿Cuáles son los temas con mayor tasa de crecimiento (medido en los 5 años posteriores a su surgimiento)?
+3. ¿Cuáles son los temas más populares en las publicaciones académicas de inteligencia artificial?
+4. ¿Cómo se distribuyen geográficamente las publicaciones académicas en este campo?
+5. ¿Hay alguna correlación entre el número de publicaciones y el impacto de las mismas (medido por citas, por ejemplo)?
+6. ¿Existe una relación entre la internacionalización de los autores (co-autoría internacional) y el impacto del artículo?
+7. ¿Publicar en Open Access genera una ventaja significativa en el número de citas?
+
+## Descripción del Dataset utilizado
+
+Los datos fueron obtenidos usando la API de OpenAlex, una enorme base de datos sobre publicaciones científicas, accesibles por diferentes parámetros. Para delimitar mejor los datos, tomé solo los papers sobre inteligencia artificial publicados en los años 1950 – 2026. Por limitaciones de la API, construí 3 datasets: uno con datos agregados de publicaciones de temas relacionados a IA de forma anual, otro también agregado pero con información geográfica, y otro que es un muestreo de 1000 papers por año, para obtener información aproximada sobre el número de citas, co-autoría internacional, y acceso abierto. Si hubiera generado un dataset "puro" de esos años, no hubiera podido por las limitaciones de la API, y serían tantos papers que no se podrían analizar de forma eficiente.
+
+### Dataset A - Conteos por tema y año
+
+Head:
+
+```{python}
+import pandas as pd
+
+df = pd.read_csv("data/ai_topic_year_counts.csv")
+df.head()
+```
+
+### Dataset B - Conteos por país y año
+
+Head:
+
+```{python}
+import pandas as pd
+
+df = pd.read_csv("data/ai_geo_year_counts.csv")
+df.head()
+```
+
+### Dataset C - Muestreo de papers individuales
+
+Head:
+
+```{python}
+import pandas as pd
+
+df = pd.read_csv("data/ai_papers_sample.csv")
+df.head()
+```
+
+## Enlaces 
+
+- [Data Cleaning](data_cleaning.qmd)
+- [Visualización](visualizations.qmd)
